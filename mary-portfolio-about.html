@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About | Mary Liu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared-nav-footer.css" />
+  <style>
+    :root {
+      --bg: #f4f5f0;
+      --ink: #101010;
+      --muted: rgba(0, 0, 0, 0.44);
+      --accent-purple: #40324a;
+      --about-camera-h: 98px;
+    }
+    * { box-sizing: border-box; }
+    body.page-about {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Martian Mono", ui-monospace, monospace;
+    }
+
+    .about-shell {
+      width: 1440px;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 0 80px;
+    }
+
+    .about-section {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: clamp(48px, 7vw, 96px);
+      padding: 0 45px;
+      box-sizing: border-box;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(200px, 220px) minmax(260px, 380px);
+      gap: clamp(28px, 4vw, 48px);
+      align-items: start;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    /* Top of headline lines up with top of polaroid print (scene padding + camera − slot overlap) */
+    .about-copy {
+      padding-top: calc(8px + var(--about-camera-h) - 5px);
+      max-width: 520px;
+    }
+
+    /* —— Polaroid + camera —— */
+    .polaroid-scene {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 8px;
+    }
+
+    .polaroid-camera {
+      position: relative;
+      width: min(220px, 88vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Classic instant-film camera: white plastic, rainbow stripe, chrome lens */
+    .polaroid-camera__body {
+      width: 100%;
+      max-width: 210px;
+      height: var(--about-camera-h);
+      border-radius: 10px 10px 8px 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 38%, #ebebeb 100%);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.06),
+        0 8px 22px rgba(0, 0, 0, 0.12);
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 7px 6px;
+      box-sizing: border-box;
+    }
+
+    .polaroid-camera__rainbow {
+      height: 3px;
+      border-radius: 2px;
+      margin-bottom: 5px;
+      background: linear-gradient(
+        90deg,
+        #d62828,
+        #f77f00,
+        #fcbf49,
+        #2a9d8f,
+        #264653,
+        #6a4c93
+      );
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+    }
+
+    .polaroid-camera__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .polaroid-camera__viewfinder {
+      width: 24px;
+      height: 17px;
+      border-radius: 2px;
+      background: linear-gradient(145deg, #2a2520, #0d0c0b);
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.06);
+    }
+
+    .polaroid-camera__name {
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 7px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      color: rgba(0, 0, 0, 0.38);
+    }
+
+    .polaroid-camera__face {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .polaroid-camera__lens-housing {
+      position: relative;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(145deg, #d4d4d4 0%, #9a9a9a 55%, #6e6e6e 100%);
+      box-shadow:
+        inset 0 2px 3px rgba(255, 255, 255, 0.45),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.18),
+        0 3px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .polaroid-camera__lens {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #3d3d3d, #0a0a0a 72%);
+      box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .polaroid-camera__lens::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, rgba(200, 220, 255, 0.15), transparent 50%);
+    }
+
+    .polaroid-camera__shutter {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: radial-gradient(circle at 30% 30%, #e85d6c, #9e1b2b 80%);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .polaroid-camera__slot {
+      position: relative;
+      width: min(220px, 88vw);
+      min-height: 96px;
+      margin-top: -5px;
+      padding-bottom: 6px;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .polaroid-print {
+      --eject-duration: 1.35s;
+      --eject-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      width: min(200px, 72vw);
+      padding: 12px 12px 36px;
+      background: #fff;
+      border-radius: 2px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 12px 28px rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.05);
+      transform: translateY(-72%);
+      animation: polaroid-eject var(--eject-duration) var(--eject-ease) 0.15s forwards;
+    }
+
+    @keyframes polaroid-eject {
+      from {
+        transform: translateY(-72%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .polaroid-print {
+        animation: none;
+        transform: translateY(0);
+      }
+    }
+
+    .polaroid-print__photo {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 1px;
+      background: #0a0a0a;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.04);
+    }
+
+    .polaroid-print__photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.08) brightness(0.98);
+      transform: scale(1.02);
+    }
+
+    /* Subtle grain — stays in family with the rest of the site */
+    .polaroid-print__grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    .polaroid-print__caption {
+      margin: 10px 0 0;
+      padding: 0 4px;
+      text-align: center;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: rgba(0, 0, 0, 0.48);
+    }
+
+    .about-copy h1 {
+      margin: 0 0 18px;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-transform: lowercase;
+    }
+
+    .about-copy .about-bio {
+      margin: 0 0 26px;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+      color: var(--muted);
+      font-weight: 400;
+      max-width: 42em;
+      text-transform: lowercase;
+    }
+
+    .about-bio__highlight {
+      color: #8b3a5c;
+    }
+
+    .about-contact-label {
+      margin: 0 0 10px;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: var(--muted);
+    }
+
+    .about-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+    }
+
+    /* Same recipe as .site-footer__link, tuned for light page background */
+    body.page-about .about-actions .site-footer__link {
+      color: rgba(0, 0, 0, 0.62);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    body.page-about .about-actions .site-footer__link:hover {
+      color: #8b3a5c;
+      border-color: #ffc8dc;
+      background: #ffe4ef;
+    }
+
+    body.page-about .about-actions .site-footer__link:focus-visible {
+      outline: 2px solid #ffc8dc;
+      outline-offset: 3px;
+    }
+
+    /* —— My toolkit: floating soft icon bubbles —— */
+    .about-toolkit-section {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 56px;
+      padding: 0 45px 8px;
+      box-sizing: border-box;
+    }
+
+    .about-toolkit-inner {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding-top: 28px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .about-toolkit__title {
+      margin: 0 0 28px;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: clamp(22px, 2.4vw, 28px);
+      line-height: 1.05;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .about-toolkit__icons {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 26px 32px;
+      align-items: flex-start;
+    }
+
+    .toolkit-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .toolkit-icon {
+      animation: toolkit-icon-float 5.2s ease-in-out infinite;
+      animation-delay: var(--float-delay, 0s);
+    }
+
+    @keyframes toolkit-icon-float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+      50% {
+        transform: translateY(-11px) rotate(3deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toolkit-icon {
+        animation: none;
+      }
+    }
+
+    .toolkit-icon__surface {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: var(--bubble-bg, #ffffff);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 12px 28px rgba(0, 0, 0, 0.06),
+        0 4px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .toolkit-icon__surface::after {
+      content: "";
+      position: absolute;
+      inset: 6px 10px auto;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .toolkit-icon__surface svg {
+      position: relative;
+      z-index: 1;
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    .toolkit-icon__name {
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: var(--muted);
+      text-align: center;
+      max-width: 92px;
+      line-height: 1.35;
+    }
+
+    /* —— What I'm up to: polaroid strip —— */
+    .about-life-section {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 48px;
+      padding: 0 45px 56px;
+      box-sizing: border-box;
+    }
+
+    .about-life-inner {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding-top: 28px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .about-life__title {
+      margin: 0 0 24px;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: clamp(22px, 2.4vw, 28px);
+      line-height: 1.05;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .about-life__strip {
+      list-style: none;
+      margin: 0 auto;
+      padding: 28px 8px 40px;
+      width: max-content;
+      max-width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      column-gap: clamp(20px, 5vw, 36px);
+      row-gap: clamp(48px, 7vw, 64px);
+      justify-items: center;
+      align-items: end;
+      overflow: visible;
+    }
+
+    .about-life__strip > li {
+      margin: 0;
+      padding: 12px 14px;
+      width: auto;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .about-life-polaroid {
+      --pointer-x: 0deg;
+      --pointer-y: 0deg;
+      width: min(172px, 40vw);
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      cursor: grab;
+      transform: translate(var(--life-x, 0px), var(--life-y, 0px)) rotate(var(--life-tilt, 0deg))
+        perspective(560px) rotateX(var(--pointer-y)) rotateY(var(--pointer-x));
+      transform-style: preserve-3d;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .about-life-polaroid:active {
+      cursor: grabbing;
+    }
+
+    .about-life-polaroid:hover,
+    .about-life-polaroid:focus-visible {
+      z-index: 8;
+      transform: translate(var(--life-x, 0px), calc(var(--life-y, 0px) - 8px))
+        rotate(calc(var(--life-tilt, 0deg) * 0.35)) perspective(560px) rotateX(var(--pointer-y))
+        rotateY(var(--pointer-x)) scale(1.03);
+    }
+
+    .about-life-polaroid:focus-visible {
+      outline: none;
+    }
+
+    .about-life-polaroid__card {
+      padding: 10px 10px 14px;
+      background: #fff;
+      border-radius: 2px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 10px 26px rgba(0, 0, 0, 0.09),
+        0 2px 5px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .about-life-polaroid:hover .about-life-polaroid__card {
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 26px 52px rgba(0, 0, 0, 0.15),
+        0 10px 22px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-life-polaroid:focus-visible .about-life-polaroid__card {
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 26px 52px rgba(0, 0, 0, 0.15),
+        0 10px 22px rgba(0, 0, 0, 0.1),
+        0 0 0 2px #ffc8dc;
+    }
+
+    .about-life-polaroid:active .about-life-polaroid__card {
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 14px 28px rgba(0, 0, 0, 0.11),
+        0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .about-life-polaroid__photo {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 1px;
+      background: #0a0a0a;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.04);
+    }
+
+    .about-life-polaroid__photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.12) brightness(0.96);
+      transform: scale(1.02);
+    }
+
+    .about-life-polaroid__grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.32;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+    }
+
+    .about-life-polaroid__caption {
+      margin: 10px 0 0;
+      padding: 0 2px;
+      text-align: center;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 9px;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: rgba(0, 0, 0, 0.48);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .about-life-polaroid {
+        transform: translate(var(--life-x, 0px), var(--life-y, 0px)) rotate(var(--life-tilt, 0deg));
+      }
+      .about-life-polaroid:hover,
+      .about-life-polaroid:focus-visible {
+        transform: translate(var(--life-x, 0px), var(--life-y, 0px)) rotate(var(--life-tilt, 0deg)) scale(1.02);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .about-life__strip {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-width: 220px;
+        row-gap: 32px;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .about-section {
+        padding: 0 24px;
+      }
+      .about-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
+      .about-copy {
+        max-width: 100%;
+        padding-top: 0;
+      }
+      .polaroid-scene {
+        padding-bottom: 8px;
+      }
+      .about-toolkit-section {
+        padding: 0 24px 8px;
+        margin-top: 44px;
+      }
+      .about-life-section {
+        padding: 0 24px 40px;
+        margin-top: 40px;
+      }
+    }
+  </style>
+</head>
+<body class="page-about">
+  <main class="about-shell">
+    <header class="topbar">
+      <a href="mary-portfolio-wireframe.html" class="brand magnetic">mary</a>
+      <nav class="nav" aria-label="Primary">
+        <a class="magnetic" href="mary-portfolio-wireframe.html">work</a>
+        <a class="magnetic" href="mary-portfolio-play.html">play</a>
+        <a class="magnetic" aria-current="page" href="mary-portfolio-about.html">about me</a>
+      </nav>
+    </header>
+
+    <div class="about-section">
+    <div class="about-grid">
+      <div class="polaroid-scene">
+        <div class="polaroid-camera">
+          <div class="polaroid-camera__body">
+            <div class="polaroid-camera__rainbow" aria-hidden="true"></div>
+            <div class="polaroid-camera__row">
+              <span class="polaroid-camera__viewfinder" aria-hidden="true"></span>
+              <span class="polaroid-camera__name">polaroid</span>
+            </div>
+            <div class="polaroid-camera__face">
+              <div class="polaroid-camera__lens-housing">
+                <span class="polaroid-camera__lens" aria-hidden="true"></span>
+              </div>
+              <span class="polaroid-camera__shutter" aria-hidden="true"></span>
+            </div>
+          </div>
+          <div class="polaroid-camera__slot">
+            <div class="polaroid-print">
+              <div class="polaroid-print__photo">
+                <img
+                  src="assets/mary-about-portrait.png"
+                  alt="Portrait of Mary"
+                  width="600"
+                  height="800"
+                  loading="eager"
+                  decoding="async"
+                />
+                <div class="polaroid-print__grain" aria-hidden="true"></div>
+              </div>
+              <p class="polaroid-print__caption">nice 2 meet u!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="about-copy" aria-labelledby="about-title">
+        <h1 id="about-title">meet mary</h1>
+        <p class="about-bio">
+          mary is a <span class="about-bio__highlight">painter turned designer</span> that specializes in storytelling and creating products that people love.
+          she designs for b2b, b2c, as well as audience driven work (branding and graphics).
+        </p>
+        <p class="about-contact-label">contact me</p>
+        <div class="about-actions">
+          <a class="site-footer__link" href="mailto:maryyyliu5@gmail.com">email me</a>
+          <a class="site-footer__link" href="https://www.linkedin.com/in/maryliux" target="_blank" rel="noopener noreferrer">linkedin</a>
+        </div>
+      </section>
+    </div>
+    </div>
+
+    <section class="about-toolkit-section" aria-labelledby="toolkit-heading">
+      <div class="about-toolkit-inner">
+        <h2 id="toolkit-heading" class="about-toolkit__title">my toolkit</h2>
+        <ul class="about-toolkit__icons">
+          <li class="toolkit-item" style="--float-delay: 0s; --bubble-bg: linear-gradient(165deg, #f0f7ff 0%, #dceeff 100%);">
+            <div class="toolkit-icon" aria-hidden="true">
+              <div class="toolkit-icon__surface">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="24" height="24" rx="5" fill="#001d26" />
+                  <text x="12" y="16" text-anchor="middle" font-size="8.5" font-weight="700" fill="#31a8ff" font-family="Arial, Helvetica, sans-serif">Ps</text>
+                </svg>
+              </div>
+            </div>
+            <span class="toolkit-icon__name">adobe photoshop</span>
+          </li>
+          <li class="toolkit-item" style="--float-delay: 0.35s; --bubble-bg: linear-gradient(165deg, #fff8f0 0%, #ffe8d4 100%);">
+            <div class="toolkit-icon" aria-hidden="true">
+              <div class="toolkit-icon__surface">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="24" height="24" rx="5" fill="#330000" />
+                  <text x="12" y="16" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ff9a00" font-family="Arial, Helvetica, sans-serif">Ai</text>
+                </svg>
+              </div>
+            </div>
+            <span class="toolkit-icon__name">adobe illustrator</span>
+          </li>
+          <li class="toolkit-item" style="--float-delay: 0.7s; --bubble-bg: linear-gradient(165deg, #fff5f9 0%, #ffdfea 100%);">
+            <div class="toolkit-icon" aria-hidden="true">
+              <div class="toolkit-icon__surface">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="24" height="24" rx="5" fill="#3d1528" />
+                  <text x="12" y="16" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ff3366" font-family="Arial, Helvetica, sans-serif">Id</text>
+                </svg>
+              </div>
+            </div>
+            <span class="toolkit-icon__name">adobe indesign</span>
+          </li>
+          <li class="toolkit-item" style="--float-delay: 1.05s; --bubble-bg: linear-gradient(165deg, #ffffff 0%, #f5f5f3 100%);">
+            <div class="toolkit-icon" aria-hidden="true">
+              <div class="toolkit-icon__surface">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path
+                    fill="#f24e1e"
+                    d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <span class="toolkit-icon__name">figma</span>
+          </li>
+          <li class="toolkit-item" style="--float-delay: 1.4s; --bubble-bg: linear-gradient(165deg, #fffbeb 0%, #fff3c4 100%);">
+            <div class="toolkit-icon" aria-hidden="true">
+              <div class="toolkit-icon__surface">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="24" height="24" rx="5" fill="#ffd02f" />
+                  <path
+                    fill="#050038"
+                    d="M17.392 0H13.9L17 4.808 10.444 0H6.949l3.102 6.3L3.494 0H0l3.05 8.131L0 24h3.494L10.05 6.985 6.949 24h3.494L17 5.494 13.899 24h3.493L24 3.672 17.392 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <span class="toolkit-icon__name">miro</span>
+          </li>
+          <li class="toolkit-item" style="--float-delay: 1.75s; --bubble-bg: linear-gradient(165deg, #f4f2ee 0%, #e8e4dc 100%);">
+            <div class="toolkit-icon" aria-hidden="true">
+              <div class="toolkit-icon__surface">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="24" height="24" rx="5" fill="#0d0d0d" />
+                  <path
+                    fill="#ede0d0"
+                    d="M7 5.5l4.2 7.8L13 11l4 8.5-2.8-1.2-3.2 1.8L7 5.5z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <span class="toolkit-icon__name">cursor</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-life-section" aria-labelledby="life-heading">
+      <div class="about-life-inner">
+        <h2 id="life-heading" class="about-life__title">what i'm up to</h2>
+        <ul class="about-life__strip">
+          <li style="--life-tilt: -3deg; --life-x: 0px; --life-y: 0px;">
+            <div class="about-life-polaroid" tabindex="0">
+              <div class="about-life-polaroid__card">
+                <div class="about-life-polaroid__photo">
+                  <img
+                    src="assets/about-life-dancing-penn.png"
+                    alt="Dancers in a studio"
+                    width="400"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="about-life-polaroid__grain" aria-hidden="true"></div>
+                </div>
+                <p class="about-life-polaroid__caption">dancing @ penn</p>
+              </div>
+            </div>
+          </li>
+          <li style="--life-tilt: 3deg; --life-x: 0px; --life-y: 0px;">
+            <div class="about-life-polaroid" tabindex="0">
+              <div class="about-life-polaroid__card">
+                <div class="about-life-polaroid__photo">
+                  <img
+                    src="assets/about-life-friend-tographer.png"
+                    alt="Taking a photo for a friend"
+                    width="400"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="about-life-polaroid__grain" aria-hidden="true"></div>
+                </div>
+                <p class="about-life-polaroid__caption">serving as friend-tographer</p>
+              </div>
+            </div>
+          </li>
+          <li style="--life-tilt: -3deg; --life-x: 0px; --life-y: 0px;">
+            <div class="about-life-polaroid" tabindex="0">
+              <div class="about-life-polaroid__card">
+                <div class="about-life-polaroid__photo">
+                  <img
+                    src="assets/about-life-artmaxxing.png"
+                    alt="In a gallery space"
+                    width="400"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="about-life-polaroid__grain" aria-hidden="true"></div>
+                </div>
+                <p class="about-life-polaroid__caption">artmaxxing</p>
+              </div>
+            </div>
+          </li>
+          <li style="--life-tilt: 4deg; --life-x: 0px; --life-y: 0px;">
+            <div class="about-life-polaroid" tabindex="0">
+              <div class="about-life-polaroid__card">
+                <div class="about-life-polaroid__photo">
+                  <img
+                    src="assets/about-life-cat-watching.png"
+                    alt="A cat sitting outdoors"
+                    width="400"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="about-life-polaroid__grain" aria-hidden="true"></div>
+                </div>
+                <p class="about-life-polaroid__caption">cat watching</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" aria-label="Site footer" id="siteFooter">
+    <div class="site-footer__stars" id="siteFooterStars" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <h2 class="site-footer__title">
+        thanks for visiting. everyone leaves something in their path. what will your mark be?
+      </h2>
+      <p class="site-footer__credit">made with lots of jujube tea ⋆☕︎˖</p>
+
+      <nav class="site-footer__links" aria-label="Links">
+        <a class="site-footer__link" href="https://drive.google.com/file/d/1aDOR498S0hrAOGXYXMxbqq_hmDT0Ccwl/view" target="_blank" rel="noopener noreferrer">grab my resume</a>
+        <a class="site-footer__link" href="https://www.linkedin.com/in/maryliux" target="_blank" rel="noopener noreferrer">linkedin</a>
+        <a class="site-footer__link" href="https://medium.com/@maryliu_37197" target="_blank" rel="noopener noreferrer">medium</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      document.querySelectorAll(".about-life-polaroid").forEach((el) => {
+        const onMove = (e) => {
+          if (mq.matches || !e.isPrimary) return;
+          const r = el.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          el.style.setProperty("--pointer-x", (px * 8).toFixed(2) + "deg");
+          el.style.setProperty("--pointer-y", (-py * 6).toFixed(2) + "deg");
+        };
+        const reset = () => {
+          el.style.setProperty("--pointer-x", "0deg");
+          el.style.setProperty("--pointer-y", "0deg");
+        };
+        el.addEventListener("pointermove", onMove);
+        el.addEventListener("pointerleave", reset);
+        el.addEventListener("pointercancel", reset);
+        el.addEventListener("blur", reset);
+      });
+    })();
+  </script>
+  <script src="magnetic-hover.js" defer></script>
+  <script src="footer-stars.js" defer></script>
+</body>
+</html>

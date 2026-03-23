@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sketchy Portfolio</title>
+
+<!-- Fonts: sketchy / hand-drawn -->
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#fbfdf8;
+    --ink:#0b1a13;
+    --accent:#f05a28;
+    --muted:#dedbd6;
+  }
+
+  /* Page & paper texture */
+  html,body{height:100%;margin:0;font-family:Patrick Hand, system-ui, sans-serif;background:var(--bg);}
+  .paper{
+    max-width:1200px;margin:40px auto;padding:40px;background:linear-gradient(180deg,#fff, #fbfbf6);
+    box-shadow:0 10px 30px rgba(15,20,10,0.08);border-radius:10px;position:relative;overflow:hidden;
+  }
+  /* subtle noise using SVG filter (inline) */
+  .paper::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.035" /></svg>');
+    mix-blend-mode:multiply;opacity:1;
+  }
+
+  header{display:flex;align-items:center;gap:18px;margin-bottom:28px;}
+  .logo{
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .brand{
+    font-family:'Permanent Marker', 'Patrick Hand';font-size:34px;color:var(--accent);letter-spacing:1px;
+  }
+  .subtitle{font-size:13px;color:#666;}
+
+  /* Projects grid - loose "sketchy" layout using uneven gaps */
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:22px 36px;
+  }
+  .card{
+    background:linear-gradient(180deg,#fff,#f7f7f5);
+    border-radius:10px;padding:18px;border:2px dashed rgba(0,0,0,0.06);
+    position:relative;cursor:pointer;overflow:hidden;
+    transition:transform .18s ease,box-shadow .18s ease;
+  }
+  .card:hover{transform:translateY(-6px) rotate(-0.3deg);box-shadow:0 18px 30px rgba(10,20,10,0.06);}
+  .card .thumb{
+    height:160px;background:#f1f1ef;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;
+    font-size:28px;color:var(--muted);font-weight:700;
+    border:3px solid rgba(0,0,0,0.03);
+  }
+  .card h3{margin:0;font-size:18px;color:var(--ink);font-family:'Permanent Marker', 'Patrick Hand';}
+  .card p{margin:6px 0 0;font-size:13px;color:#666;}
+
+  /* Hand-drawn accents */
+  .doodle{
+    position:absolute;opacity:.18;pointer-events:none;
+  }
+
+  /* sketchy cursor */
+  * {cursor: none;}
+  .cursor{
+    position:fixed;top:0;left:0;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:multiply;
+    width:46px;height:46px;display:flex;align-items:center;justify-content:center;
+    transition:transform 150ms linear;
+    z-index:9999;
+  }
+  .cursor .dot{
+    width:10px;height:10px;background:var(--ink);border-radius:50%;box-shadow:0 1px 0 rgba(255,255,255,0.06);
+  }
+  .cursor.enlarge .dot{width:18px;height:18px;background:var(--accent);}
+
+  /* scribble trail canvas sits under cursor visuals */
+  canvas#trail{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9998;opacity:.9}
+
+  /* responsive */
+  @media (max-width:900px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .paper{margin:20px;}
+  }
+  @media (max-width:560px){
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="paper">
+  <header>
+    <div class="logo">
+      <div class="brand">Your Name</div>
+      <div class="subtitle">Product Design — Sketchy portfolio</div>
+    </div>
+    <!-- small ink doodle -->
+    <svg class="doodle" width="120" height="80" viewBox="0 0 120 80" style="right:24px;top:8px;position:absolute;">
+      <path d="M6,70 q30-60 60-40 q30,20 48-10" fill="none" stroke="#e6e6e6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" />
+    </svg>
+  </header>
+
+  <main>
+    <section class="grid" id="projects">
+      <!-- repeat these cards, swap thumbs with images -->
+      <article class="card">
+        <div class="thumb">Project 1</div>
+        <h3>Product Name</h3>
+        <p>Short one-line description, tactile & playful.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb">Project 2</div>
+        <h3>Explorations</h3>
+        <p>Sketch-first research and quick prototypes.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb">Project 3</div>
+        <h3>Concepts</h3>
+        <p>Hand-drawn UI & motion direction.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb">Project 4</div>
+        <h3>Branding</h3>
+        <p>Loose marks, playful color studies.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb">Project 5</div>
+        <h3>UX Case</h3>
+        <p>Story-led flows with annotated sketches.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb">Project 6</div>
+        <h3>Other Work</h3>
+        <p>Misc experiments & small tools.</p>
+      </article>
+    </section>
+  </main>
+</div>
+
+<!-- trail canvas & cursor element -->
+<canvas id="trail"></canvas>
+<div class="cursor" id="cursor"><div class="dot"></div></div>
+
+<script>
+/* Cursor + scribble trail
+   - The cursor element follows mouse with small easing.
+   - The canvas draws a short bezier-like scribble trail that decays.
+*/
+(() => {
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('trail');
+  const ctx = trail.getContext('2d');
+
+  // size canvas for high DPI
+  function resize(){ trail.width = innerWidth * devicePixelRatio; trail.height = innerHeight * devicePixelRatio; trail.style.width = innerWidth + 'px'; trail.style.height = innerHeight + 'px'; ctx.setTransform(1,0,0,1,0,0); ctx.scale(devicePixelRatio, devicePixelRatio); }
+  resize(); addEventListener('resize', resize);
+
+  let mouse = {x: innerWidth/2, y: innerHeight/2};
+  let pos = {...mouse};
+
+  // pointer follow
+  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  addEventListener('pointerdown', ()=> { cursor.classList.add('enlarge'); });
+  addEventListener('pointerup', ()=> { cursor.classList.remove('enlarge'); });
+
+  // draw trail points queue
+  const points = [];
+  function tick(){
+    // smooth follow
+    pos.x += (mouse.x - pos.x) * 0.22;
+    pos.y += (mouse.y - pos.y) * 0.22;
+    cursor.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+
+    // add points to trail
+    points.push({x: pos.x, y: pos.y, age: 1.0});
+    // decay / draw
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+
+    for (let i = 0; i < points.length; i++){
+      const p = points[i];
+      p.age -= 0.02;
+      if (p.age <= 0) { points.splice(i,1); i--; continue; }
+      // draw small scribbly circles with random jitter to make "sketchy" line
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(5,15,10,${0.18 * p.age})`;
+      const jitter = (1 - p.age) * 6;
+      ctx.arc(p.x + (Math.random()-0.5)*jitter, p.y + (Math.random()-0.5)*jitter, 3 + (1 - p.age)*2, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // enlarge on hover over interactive items
+  document.querySelectorAll('.card, a, button').forEach(el => {
+    el.addEventListener('pointerenter', ()=> cursor.classList.add('enlarge'));
+    el.addEventListener('pointerleave', ()=> cursor.classList.remove('enlarge'));
+  });
+
+  // keyboard accessibility: show system cursor if using keyboard navigation
+  addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      document.body.style.cursor = '';
+      document.querySelectorAll('*').forEach(n => n.style.cursor = '');
+      cursor.style.display = 'none';
+      trail.style.display = 'none';
+    }
+  });
+})();
+</script>
+</body>
+</html>

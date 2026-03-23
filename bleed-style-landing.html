@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mary Studio - Portfolio</title>
+  <style>
+    :root {
+      --bg: #f6f6f2;
+      --ink: #121212;
+      --muted: #4b4b4b;
+      --line: #ddddda;
+      --card: #ecece8;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Courier New", Courier, monospace;
+      line-height: 1.15;
+      padding: 22px 24px 50px;
+    }
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 58px;
+    }
+    .studio-name {
+      font-size: 30px;
+      margin: 0 0 24px;
+      letter-spacing: -0.02em;
+    }
+    .top-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 220px;
+      gap: 26px;
+      font-size: 15px;
+    }
+    .top-meta h3 {
+      margin: 0 0 8px;
+      font-weight: 400;
+      font-size: 14px;
+    }
+    .top-meta p {
+      margin: 0;
+      white-space: pre-line;
+    }
+    .featured-thumb {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      background: linear-gradient(160deg, #2c2c2c, #0f0f0f 58%, #4d4d4d);
+      border: 1px solid #181818;
+    }
+
+    .intro {
+      margin-top: 22px;
+      font-size: clamp(30px, 4.2vw, 56px);
+      max-width: 860px;
+      letter-spacing: -0.03em;
+      line-height: 1.03;
+    }
+    .learn {
+      display: inline-block;
+      margin-top: 18px;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 35px;
+      letter-spacing: -0.03em;
+    }
+
+    .project {
+      margin-top: 68px;
+    }
+    .project-head {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 12px;
+    }
+    .meta-small {
+      font-size: 13px;
+      color: var(--muted);
+      white-space: pre-line;
+    }
+    .project-title {
+      font-size: clamp(28px, 3.5vw, 46px);
+      margin: 0;
+      line-height: 0.97;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+    .service-line {
+      margin-top: 5px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .shot {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--card);
+      overflow: hidden;
+      aspect-ratio: 16 / 11;
+      position: relative;
+    }
+    .shot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(0,0,0,0.08), rgba(0,0,0,0) 50%);
+    }
+    .shot-label {
+      position: absolute;
+      bottom: 8px;
+      left: 9px;
+      font-size: 11px;
+      color: #2f2f2f;
+      background: rgba(246,246,242,0.88);
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #d0d0cb;
+    }
+
+    .footer-row {
+      margin-top: 62px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #3e3e3e;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .top-meta { grid-template-columns: 1fr; }
+      .project-head { grid-template-columns: 1fr; }
+      .project-grid { grid-template-columns: 1fr; }
+      body { padding: 16px 14px 42px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1 class="studio-name">Mary Design Studio</h1>
+
+      <section class="top-meta">
+        <article>
+          <h3>Playing at the studio;</h3>
+          <p>oslo :)
+low (feat. china pghemy)
+AAA twilight
+
+vienna :)
+sub (club edit)
+broken english club</p>
+        </article>
+
+        <article>
+          <h3>Lately;</h3>
+          <p>- red key launched (est-)
+- api meets for selective + mbl(work-)
+- tddo08 installation (work-)
+- gold x visual from kslxz (work-)
+- ambient launch
+- selective music hosted at tc (work-)
+- air exploration (play)</p>
+        </article>
+
+        <article>
+          <h3>Featured;</h3>
+          <p>soy vein
+eau de parfum</p>
+          <div class="featured-thumb" aria-hidden="true"></div>
+        </article>
+      </section>
+
+      <div class="intro">Mary blurs design, technology, and strategy to formulate, strengthen and expand brands globally.</div>
+      <a class="learn" href="#">Learn more -></a>
+    </header>
+
+    <section class="project">
+      <div class="project-head">
+        <div class="meta-small">Category:
+Arts & Culture</div>
+        <div>
+          <h2 class="project-title">AMBASSADEN<br>ON A DIPLOMATIC MISSION</h2>
+          <div class="service-line">Services: Strategy, Visual Identity, UX/UI, Design Systems, Illustration, Animation, Art Direction</div>
+        </div>
+      </div>
+      <div class="project-grid">
+        <figure class="shot"><figcaption class="shot-label">identity system</figcaption></figure>
+        <figure class="shot"><figcaption class="shot-label">mobile touchpoint</figcaption></figure>
+        <figure class="shot"><figcaption class="shot-label">illustration set</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="project">
+      <div class="project-head">
+        <div class="meta-small">Category:
+Lifestyle</div>
+        <div>
+          <h2 class="project-title">MORROW<br>(TOMORROW POWERED BY US)</h2>
+          <div class="service-line">Services: Strategy, Visual Identity, UX/UI, Design Systems, Illustration, Animation, Art Direction</div>
+        </div>
+      </div>
+      <div class="project-grid">
+        <figure class="shot"><figcaption class="shot-label">signage</figcaption></figure>
+        <figure class="shot"><figcaption class="shot-label">campaign</figcaption></figure>
+        <figure class="shot"><figcaption class="shot-label">motion still</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="project">
+      <div class="project-head">
+        <div class="meta-small">Category:
+Future & Technology</div>
+        <div>
+          <h2 class="project-title">THE HISTORICAL MUSEUM<br>FUTURE <> PAST</h2>
+          <div class="service-line">Services: Strategy, Visual Identity, UX/UI, Design Systems, Exhibition, Art Direction</div>
+        </div>
+      </div>
+      <div class="project-grid">
+        <figure class="shot"><figcaption class="shot-label">archive interface</figcaption></figure>
+        <figure class="shot"><figcaption class="shot-label">ticketing flow</figcaption></figure>
+        <figure class="shot"><figcaption class="shot-label">spatial graphic</figcaption></figure>
+      </div>
+    </section>
+
+    <footer class="footer-row">
+      <span>cET 16:32:39</span>
+      <span>mary.design / ig / be / dribbble</span>
+    </footer>
+  </main>
+</body>
+</html>

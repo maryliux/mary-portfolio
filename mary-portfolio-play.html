@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Play | Mary Liu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared-nav-footer.css" />
+  <style>
+    :root {
+      --bg: #f4f5f0;
+      --ink: #101010;
+      /* Side gutters for move-to-explore (script uses computed padding) */
+      --play-explore-pad-x: clamp(20px, 5vw, 64px);
+      /* Extra space on the right — thumbnails sit farther from the screen edge */
+      --play-explore-pad-right-extra: clamp(20px, 5vw, 72px);
+      /* Dotted grid — larger spacing + clearer dots */
+      --play-dot-pattern: radial-gradient(circle, rgba(0, 0, 0, 0.14) 1.1px, transparent 1.4px);
+      --play-dot-pattern-strong: radial-gradient(circle, rgba(0, 0, 0, 0.17) 1.1px, transparent 1.4px);
+      --play-dot-grid: 22px 22px;
+    }
+    * { box-sizing: border-box; }
+    body.page-play {
+      margin: 0;
+      background-color: var(--bg);
+      background-image: var(--play-dot-pattern);
+      background-size: var(--play-dot-grid);
+      background-repeat: repeat;
+      color: var(--ink);
+      font-family: "Martian Mono", "Courier New", monospace;
+    }
+
+    /* Same horizontal frame as wireframe `.page` so sticky topbar lines up when navigating */
+    .play-shell {
+      width: 1440px;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 0 80px;
+      position: relative;
+      z-index: 1;
+      box-sizing: border-box;
+    }
+
+    .play-stage {
+      position: relative;
+      width: 100%;
+      min-height: calc(100vh - 56px);
+      min-height: calc(100dvh - 56px);
+    }
+
+    .play-viewport {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: calc(100vh - 56px);
+      min-height: calc(100dvh - 56px);
+      padding-left: max(var(--play-explore-pad-x), env(safe-area-inset-left));
+      padding-right: max(
+        calc(var(--play-explore-pad-x) + var(--play-explore-pad-right-extra)),
+        env(safe-area-inset-right)
+      );
+      overflow: hidden;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      background-color: var(--bg);
+      background-image: var(--play-dot-pattern);
+      background-size: var(--play-dot-grid);
+      background-repeat: repeat;
+      z-index: 1;
+    }
+    .play-viewport.is-dragging {
+      cursor: grabbing;
+    }
+    .play-viewport.play-viewport--cursor-explore {
+      cursor: crosshair;
+    }
+    .play-viewport.play-viewport--cursor-explore.is-dragging {
+      cursor: grabbing;
+    }
+
+    /* Dense collage — larger thumbs, tight gaps, no overlaps */
+    .play-world {
+      position: absolute;
+      width: 1500px;
+      height: 1200px;
+      left: 50%;
+      top: 50%;
+      margin-left: -750px;
+      margin-top: -600px;
+      will-change: transform;
+    }
+
+    .play-piece {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      width: auto;
+      transform: rotate(var(--rot, 0deg)) translateZ(0);
+      border-radius: 0;
+      overflow: visible;
+      box-shadow: none;
+      transition: none;
+      --tilt-x: 0;
+      --tilt-y: 0;
+      --media-scale: 1;
+    }
+    .play-piece.play-piece--has-hover {
+      overflow: visible;
+    }
+    .play-piece:hover {
+      z-index: 50 !important;
+      box-shadow: none;
+    }
+    .play-piece.play-piece--1 { z-index: 2; }
+    .play-piece.play-piece--2 { z-index: 3; }
+    .play-piece.play-piece--3 { z-index: 4; }
+    .play-piece.play-piece--4 { z-index: 5; }
+    .play-piece.play-piece--5 { z-index: 6; }
+    .play-piece.play-piece--6 { z-index: 7; }
+    .play-piece.play-piece--7 { z-index: 8; }
+    .play-piece.play-piece--8 { z-index: 9; }
+    .play-piece.play-piece--9 { z-index: 10; }
+    .play-piece.play-piece--10 { z-index: 11; }
+
+    .play-piece__media {
+      border-radius: 0;
+      overflow: visible;
+      width: fit-content;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.34, 1.45, 0.64, 1);
+      will-change: transform;
+    }
+    .play-piece__hovercap {
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 14px);
+      transform: translateY(-50%);
+      width: max-content;
+      max-width: min(220px, 42vw);
+      padding: 12px 14px;
+      margin: 0;
+      background: var(--bg);
+      background-image: var(--play-dot-pattern);
+      background-size: var(--play-dot-grid);
+      background-repeat: repeat;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      text-align: left;
+      color: var(--ink);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      z-index: 60;
+    }
+    .play-piece--cap-left .play-piece__hovercap {
+      left: auto;
+      right: calc(100% + 14px);
+      text-align: right;
+    }
+    .play-piece--has-hover:hover .play-piece__hovercap {
+      opacity: 1;
+    }
+    .play-piece__hovercap-kicker {
+      display: block;
+      font-weight: 600;
+    }
+    .play-piece__hovercap-type {
+      display: block;
+      margin-top: 6px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.5);
+      text-transform: lowercase;
+    }
+
+    /* Title — plain type on the page; no card, border, or filled box */
+    .play-piece.play-piece--text {
+      overflow: visible;
+      width: var(--pw, 560px);
+      box-shadow: none;
+      border-radius: 0;
+      background: transparent;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .play-piece.play-piece--title {
+      left: 50%;
+      top: 50%;
+      --pw: 560px;
+      --rot: 0deg;
+      transform: translate(-50%, -50%) rotate(var(--rot)) translateZ(0);
+      z-index: 15;
+    }
+    .play-piece.play-piece--text:hover {
+      box-shadow: none;
+    }
+    .play-piece.play-piece--title:hover {
+      box-shadow: none;
+    }
+    .play-piece__text-inner {
+      padding: 0;
+      border-radius: 0;
+      text-align: center;
+      background: transparent;
+      background-image: none;
+      border: none;
+      box-shadow: none;
+    }
+    .play-piece--text h1 {
+      margin: 0;
+      font-family: "Post", "Arial Black", sans-serif;
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      font-size: clamp(22px, 2.5vw, 44px);
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+    .play-title__line {
+      display: block;
+    }
+    .play-piece--text .play-hint {
+      margin: 14px 0 0;
+      font-size: clamp(9px, 0.75vw, 11px);
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+      color: rgba(0, 0, 0, 0.45);
+      line-height: 1.35;
+    }
+    /* Gallery — no frame/shadow; tilt + scale on hover (vars from JS) */
+    .play-piece.play-piece--has-hover .play-piece__media {
+      transform: perspective(720px) rotateX(calc(var(--tilt-y) * 1deg)) rotateY(calc(var(--tilt-x) * 1deg))
+        scale(var(--media-scale));
+    }
+    .play-piece.play-piece--has-hover:hover .play-piece__media {
+      --media-scale: 1.06;
+    }
+    .play-piece.play-piece--has-hover:active .play-piece__media {
+      --media-scale: 0.98;
+      transition-duration: 0.12s;
+    }
+    .play-piece.play-piece--has-hover .play-piece__media img {
+      display: block;
+      width: var(--img-w, 240px);
+      height: auto;
+      max-height: var(--img-max-h, 300px);
+      object-fit: contain;
+      border: none;
+      outline: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .play-piece__hovercap {
+        opacity: 1;
+      }
+      .play-piece.play-piece--has-hover .play-piece__media {
+        transition-duration: 0.2s;
+        transform: scale(var(--media-scale));
+      }
+      .play-piece.play-piece--has-hover:hover .play-piece__media {
+        --media-scale: 1.03;
+      }
+    }
+
+    .play-piece--1 { --img-w: 330px; --img-max-h: 347px; --rot: 0deg; top: 78px; left: 901px; }
+    .play-piece--2 { --img-w: 444px; --img-max-h: 347px; --rot: 0deg; top: 829px; left: 765px; }
+    .play-piece--3 { --img-w: 275px; --img-max-h: 387px; --rot: 0deg; top: 339px; left: 138px; }
+    .play-piece--4 { --img-w: 467px; --img-max-h: 299px; --rot: 0deg; top: 466px; left: 1063px; }
+    .play-piece--5 { --img-w: 299px; --img-max-h: 330px; --rot: 0deg; top: 814px; left: 1229px; }
+    .play-piece--6 { --img-w: 315px; --img-max-h: 347px; --rot: 0deg; top: 52px; left: 1236px; }
+    .play-piece--7 { --img-w: 299px; --img-max-h: 387px; --rot: 0deg; top: 69px; left: 490px; }
+    .play-piece--8 { --img-w: 403px; --img-max-h: 282px; --rot: 0deg; top: 23px; left: 100px; }
+    .play-piece--9 { --img-w: 282px; --img-max-h: 411px; --rot: 0deg; top: 777px; left: 45px; }
+    .play-piece--10 { --img-w: 315px; --img-max-h: 347px; --rot: 0deg; top: 733px; left: 430px; }
+
+    @media (max-width: 600px) {
+      .play-stage {
+        min-height: calc(100vh - 52px);
+        min-height: calc(100dvh - 52px);
+      }
+    }
+  </style>
+</head>
+<body class="page-play">
+  <main class="play-shell">
+    <header class="topbar">
+      <a href="mary-portfolio-wireframe.html" class="brand magnetic">mary</a>
+      <nav class="nav" aria-label="Primary">
+        <a class="magnetic" href="mary-portfolio-wireframe.html">work</a>
+        <a class="magnetic" aria-current="page" href="mary-portfolio-play.html">play</a>
+        <a class="magnetic" href="mary-portfolio-about.html">about me</a>
+      </nav>
+    </header>
+
+    <div class="play-stage">
+      <section
+        class="play-viewport"
+        id="playViewport"
+        aria-label="Play collage — move the cursor to look around; drag with your finger on touch screens"
+      >
+        <div class="play-world" id="playWorld">
+          <figure class="play-piece play-piece--1 play-piece--has-hover play-piece--cap-left">
+            <div class="play-piece__media">
+              <img src="assets/play/jiejie-photography.png" alt="Photograph: 姐姐" loading="lazy" width="966" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">姐姐</span>
+              <span class="play-piece__hovercap-type">Photography</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--2 play-piece--has-hover play-piece--cap-left">
+            <div class="play-piece__media">
+              <img src="assets/play/elmhurst-room-photography.png" alt="Photograph: we rented a room in elmhurst" loading="lazy" width="1024" height="768" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">we rented a room in elmhurst</span>
+              <span class="play-piece__hovercap-type">Photography</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--3 play-piece--has-hover">
+            <div class="play-piece__media">
+              <img src="assets/play/me-and-you-photography.png" alt="Photograph: me and you and everything in between" loading="lazy" width="767" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">me and you and everything in between</span>
+              <span class="play-piece__hovercap-type">Photography</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--4 play-piece--has-hover play-piece--cap-left">
+            <div class="play-piece__media">
+              <img src="assets/play/under-the-sea-painting.png" alt="Painting: under the sea" loading="lazy" width="1024" height="803" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">under the sea</span>
+              <span class="play-piece__hovercap-type">Painting</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--5 play-piece--has-hover play-piece--cap-left">
+            <div class="play-piece__media">
+              <img src="assets/play/go-eagles-painting.png" alt="Painting: go eagles!" loading="lazy" width="797" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">go eagles!</span>
+              <span class="play-piece__hovercap-type">Painting</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--6 play-piece--has-hover play-piece--cap-left">
+            <div class="play-piece__media">
+              <img src="assets/play/charli-xcx-british-vogue.png" alt="Graphic: Charli XCX on Vogue" loading="lazy" width="731" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">Charli XCX on Vogue</span>
+              <span class="play-piece__hovercap-type">Graphic design</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--7 play-piece--has-hover">
+            <div class="play-piece__media">
+              <img src="assets/play/congrats-its-a-brat.png" alt="Graphic: congrats! it’s a brat" loading="lazy" width="700" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">congrats! it’s a brat</span>
+              <span class="play-piece__hovercap-type">Graphic design</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--8 play-piece--has-hover">
+            <div class="play-piece__media">
+              <img src="assets/play/orangtua-branding.png" alt="Orangtua branding" loading="lazy" width="1024" height="934" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">Orangtua</span>
+              <span class="play-piece__hovercap-type">Branding</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--9 play-piece--has-hover">
+            <div class="play-piece__media">
+              <img src="assets/play/penn-hype-dance-crew.png" alt="Penn Hype Dance Crew" loading="lazy" width="731" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">Penn Hype Dance Crew</span>
+              <span class="play-piece__hovercap-type">Graphic design</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--10 play-piece--has-hover">
+            <div class="play-piece__media">
+              <img src="assets/play/sela-freelance-branding.png" alt="SELA freelance branding" loading="lazy" width="1024" height="1024" draggable="false" />
+            </div>
+            <figcaption class="play-piece__hovercap">
+              <span class="play-piece__hovercap-kicker">SELA</span>
+              <span class="play-piece__hovercap-type">Freelance branding</span>
+            </figcaption>
+          </figure>
+
+          <figure class="play-piece play-piece--text play-piece--title" aria-labelledby="play-title">
+            <div class="play-piece__text-inner">
+              <h1 id="play-title">
+                <span class="play-title__line">Work Hard,</span>
+                <span class="play-title__line">Play Even Harder</span>
+              </h1>
+              <p class="play-hint" id="playHint">drag to explore</p>
+            </div>
+          </figure>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer" aria-label="Site footer" id="siteFooter">
+    <div class="site-footer__stars" id="siteFooterStars" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <h2 class="site-footer__title">
+        thanks for visiting. everyone leaves something in their path. what will your mark be?
+      </h2>
+      <p class="site-footer__credit">made with lots of jujube tea ⋆☕︎˖</p>
+
+      <nav class="site-footer__links" aria-label="Links">
+        <a class="site-footer__link" href="https://drive.google.com/file/d/1aDOR498S0hrAOGXYXMxbqq_hmDT0Ccwl/view" target="_blank" rel="noopener noreferrer">grab my resume</a>
+        <a class="site-footer__link" href="https://www.linkedin.com/in/maryliux" target="_blank" rel="noopener noreferrer">linkedin</a>
+        <a class="site-footer__link" href="https://medium.com/@maryliu_37197" target="_blank" rel="noopener noreferrer">medium</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="magnetic-hover.js" defer></script>
+  <script src="footer-stars.js" defer></script>
+  <script>
+    (() => {
+      const viewport = document.getElementById('playViewport');
+      const world = document.getElementById('playWorld');
+      const hint = document.getElementById('playHint');
+      if (!viewport || !world) return;
+
+      const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      function cursorExploreEnabled() {
+        return window.matchMedia('(pointer: fine)').matches && window.matchMedia('(hover: hover)').matches;
+      }
+
+      function syncExploreMode() {
+        viewport.classList.toggle('play-viewport--cursor-explore', cursorExploreEnabled());
+        if (hint) {
+          hint.textContent = cursorExploreEnabled()
+            ? 'move your cursor to explore'
+            : 'drag to explore';
+        }
+      }
+
+      syncExploreMode();
+      window.matchMedia('(pointer: fine)').addEventListener('change', syncExploreMode);
+      window.matchMedia('(hover: hover)').addEventListener('change', syncExploreMode);
+
+      let px = 0;
+      let py = 0;
+      let targetPx = 0;
+      let targetPy = 0;
+      let dragging = false;
+      let startClientX = 0;
+      let startClientY = 0;
+      let startPx = 0;
+      let startPy = 0;
+
+      function horizontalPanBounds() {
+        const cs = getComputedStyle(viewport);
+        const pl = parseFloat(cs.paddingLeft) || 0;
+        const pr = parseFloat(cs.paddingRight) || 0;
+        const vw = viewport.clientWidth;
+        const W = world.offsetWidth;
+        let pxMax = pl - vw / 2 + W / 2;
+        let pxMin = vw / 2 - pr - W / 2;
+        if (pxMin > pxMax) {
+          pxMin = pxMax = 0;
+        }
+        return { pxMin, pxMax };
+      }
+
+      function bounds() {
+        const vh = viewport.clientHeight;
+        const { pxMin, pxMax } = horizontalPanBounds();
+        const maxY = Math.max(0, (world.offsetHeight - vh) / 2);
+        return { pxMin, pxMax, maxY };
+      }
+
+      function clamp() {
+        const { pxMin, pxMax, maxY } = bounds();
+        px = Math.max(pxMin, Math.min(pxMax, px));
+        py = Math.max(-maxY, Math.min(maxY, py));
+        targetPx = Math.max(pxMin, Math.min(pxMax, targetPx));
+        targetPy = Math.max(-maxY, Math.min(maxY, targetPy));
+      }
+
+      function applyWorld() {
+        clamp();
+        world.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+      }
+
+      function onPointerMoveExplore(e) {
+        if (!cursorExploreEnabled() || dragging) return;
+        if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+        const rect = viewport.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        const { pxMin, pxMax, maxY } = bounds();
+        /* Cursor at horizontal center → px 0; left/right edges → pxMax / pxMin (asymmetric ok) */
+        targetPx = nx <= 0 ? -nx * pxMax : nx * pxMin;
+        targetPy = -ny * maxY;
+      }
+
+      function onPointerDown(e) {
+        if (cursorExploreEnabled() && (e.pointerType === 'mouse' || e.pointerType === 'pen')) return;
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        e.preventDefault();
+        dragging = true;
+        viewport.classList.add('is-dragging');
+        try {
+          viewport.setPointerCapture(e.pointerId);
+        } catch (_) {
+          /* ignore */
+        }
+        startClientX = e.clientX;
+        startClientY = e.clientY;
+        startPx = px;
+        startPy = py;
+      }
+
+      function onPointerMoveDrag(e) {
+        if (!dragging) return;
+        e.preventDefault();
+        px = startPx + (e.clientX - startClientX);
+        py = startPy + (e.clientY - startClientY);
+        applyWorld();
+      }
+
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        viewport.classList.remove('is-dragging');
+        try {
+          if (e.pointerId != null) {
+            viewport.releasePointerCapture(e.pointerId);
+          }
+        } catch (_) {
+          /* ignore */
+        }
+      }
+
+      function tick() {
+        if (cursorExploreEnabled() && !dragging) {
+          const k = mqReduce.matches ? 1 : 0.14;
+          px += (targetPx - px) * k;
+          py += (targetPy - py) * k;
+        }
+        applyWorld();
+        requestAnimationFrame(tick);
+      }
+
+      viewport.addEventListener('pointermove', onPointerMoveExplore, { passive: true });
+      viewport.addEventListener('mouseleave', () => {
+        if (!cursorExploreEnabled() || dragging) return;
+        targetPx = 0;
+        targetPy = 0;
+      });
+
+      viewport.addEventListener('pointerdown', onPointerDown, { capture: true });
+      viewport.addEventListener('pointermove', onPointerMoveDrag, { passive: false });
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      viewport.addEventListener('lostpointercapture', () => {
+        dragging = false;
+        viewport.classList.remove('is-dragging');
+      });
+
+      window.addEventListener('resize', applyWorld);
+
+      viewport.querySelectorAll('.play-piece--has-hover').forEach((figure) => {
+        const maxTilt = 9;
+        figure.addEventListener(
+          'mousemove',
+          (e) => {
+            if (mqReduce.matches) return;
+            const rect = figure.getBoundingClientRect();
+            const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+            figure.style.setProperty('--tilt-x', (nx * maxTilt).toFixed(3));
+            figure.style.setProperty('--tilt-y', (-ny * maxTilt).toFixed(3));
+          },
+          { passive: true }
+        );
+        figure.addEventListener('mouseleave', () => {
+          figure.style.removeProperty('--tilt-x');
+          figure.style.removeProperty('--tilt-y');
+        });
+      });
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

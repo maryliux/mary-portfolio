@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mary - Playful Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #efeee8;
+      --paper: #f9f8f2;
+      --ink: #111;
+      --muted: #2f2f2f;
+      --line: #d5d4cf;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Manrope, system-ui, sans-serif;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 42px));
+      margin: 22px auto;
+      background: var(--paper);
+      border: 1px solid #dddcd6;
+      box-shadow: 0 7px 24px rgba(0, 0, 0, 0.06);
+      position: relative;
+      overflow: hidden;
+      min-height: calc(100vh - 44px);
+    }
+
+    .nav {
+      height: 58px;
+      padding: 0 20px;
+      border-bottom: 1px solid #e3e2dc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .nav-group {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: "Patrick Hand", cursive;
+      font-size: 34px;
+      letter-spacing: 1px;
+      margin-top: -2px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 24px 16px 12px;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 900px;
+      font-family: "Patrick Hand", cursive;
+      font-size: clamp(42px, 5.6vw, 82px);
+      line-height: 0.95;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+    }
+
+    .intro {
+      max-width: 740px;
+      margin: 14px auto 0;
+      font-size: clamp(14px, 1.7vw, 18px);
+      line-height: 1.4;
+      text-transform: lowercase;
+    }
+
+    .subintro {
+      margin: 10px auto 0;
+      max-width: 700px;
+      font-size: clamp(12px, 1.4vw, 15px);
+      line-height: 1.45;
+      color: #4a4a4a;
+      text-transform: lowercase;
+    }
+
+    .playground {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0;
+      border-top: 1px solid #e4e3dd;
+      min-height: 520px;
+    }
+
+    .panel {
+      padding: 20px;
+      position: relative;
+    }
+
+    .panel + .panel {
+      border-left: 1px solid #e4e3dd;
+    }
+
+    .panel-title {
+      margin: 0 0 4px;
+      font-family: "Patrick Hand", cursive;
+      font-size: 34px;
+      letter-spacing: 0.4px;
+      text-transform: lowercase;
+    }
+
+    .panel-note {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: #4c4c4c;
+      text-transform: lowercase;
+    }
+
+    .dot-wrap {
+      border: 1px dashed var(--line);
+      background: #fff;
+      padding: 12px;
+      height: 390px;
+      display: grid;
+      place-items: center;
+    }
+
+    canvas#dots {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    .dot-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .btn {
+      border: 1px solid #111;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover { background: #f2f2f2; }
+
+    .coloring-wrap {
+      border: 1px dashed var(--line);
+      background: #fff;
+      padding: 12px;
+      min-height: 390px;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: 318px;
+      display: block;
+      overflow: visible;
+    }
+
+    .colorable {
+      fill: #fff;
+      stroke: #101010;
+      stroke-width: 2.4;
+      cursor: pointer;
+      transition: fill 0.12s linear;
+    }
+
+    .line-art {
+      fill: none;
+      stroke: #101010;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .palette {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid #111;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .swatch.selected {
+      outline: 2px solid #111;
+      outline-offset: 2px;
+    }
+
+    .motif {
+      position: relative;
+      font-family: "Patrick Hand", cursive;
+      font-size: 22px;
+      text-transform: lowercase;
+      margin-top: 10px;
+    }
+
+    .floating {
+      position: absolute;
+      pointer-events: none;
+      font-family: "Patrick Hand", cursive;
+      font-size: 30px;
+      opacity: 0.9;
+      z-index: 3;
+    }
+
+    .f1 { left: 6%; top: 118px; transform: rotate(-12deg); }
+    .f2 { right: 8%; top: 154px; transform: rotate(10deg); }
+    .f3 { right: 14%; bottom: 18px; transform: rotate(-7deg); }
+
+    @media (max-width: 980px) {
+      .playground {
+        grid-template-columns: 1fr;
+      }
+      .panel + .panel {
+        border-left: none;
+        border-top: 1px solid #e4e3dd;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: 100%;
+        margin: 0;
+        min-height: 100vh;
+        border-left: none;
+        border-right: none;
+      }
+      .nav { font-size: 12px; padding: 0 12px; }
+      .logo { font-size: 28px; }
+      .floating { display: none; }
+      .dot-wrap,
+      .coloring-wrap { min-height: 320px; }
+      svg { height: 260px; }
+      .btn { padding: 7px 10px; }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="nav">
+      <div class="nav-group">
+        <span>play</span>
+        <span>work</span>
+        <span>info</span>
+      </div>
+      <div class="logo">mary</div>
+      <div class="nav-group">
+        <span>contact</span>
+        <span>about</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>hi, im mary. im a multimedia designer that believes in design that is evolving, impactful, and good for you.</h1>
+      <p class="subintro">she's currently... picking produce, autolayouting, and making her 157th spotify playlist</p>
+    </section>
+
+    <div class="floating f1">click + drag</div>
+    <div class="floating f2">color me in</div>
+    <div class="floating f3">playground</div>
+
+    <section class="playground">
+      <article class="panel">
+        <h2 class="panel-title">connect the dots</h2>
+        <p class="panel-note">trace the points in order and reveal a sketchy star.</p>
+        <div class="dot-wrap">
+          <canvas id="dots"></canvas>
+        </div>
+        <div class="dot-actions">
+          <span id="dotStatus">start from dot 1</span>
+          <button class="btn" id="resetDots" type="button">reset dots</button>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2 class="panel-title">color the characters</h2>
+        <p class="panel-note">pick a color and tap the character parts.</p>
+        <div class="coloring-wrap">
+          <svg viewBox="0 0 560 320" aria-labelledby="coloringTitle" role="img">
+            <title id="coloringTitle">Sketchy characters to color</title>
+            <ellipse class="line-art" cx="105" cy="260" rx="66" ry="3"></ellipse>
+            <ellipse class="line-art" cx="280" cy="260" rx="74" ry="3"></ellipse>
+            <ellipse class="line-art" cx="445" cy="260" rx="74" ry="3"></ellipse>
+
+            <circle class="colorable" data-part="c1-head" cx="105" cy="118" r="42"></circle>
+            <rect class="colorable" data-part="c1-body" x="74" y="160" width="62" height="90" rx="28"></rect>
+            <path class="line-art" d="M90 112h8M112 112h8M95 130c6 7 15 7 21 0"></path>
+            <path class="line-art" d="M74 196c-22 2-28 30-28 30M136 196c20 3 27 30 27 30"></path>
+
+            <circle class="colorable" data-part="c2-head" cx="280" cy="108" r="38"></circle>
+            <path class="colorable" data-part="c2-body" d="M244 168c6-18 20-30 36-30s30 12 36 30v86h-72z"></path>
+            <path class="line-art" d="M267 104h8M286 104h8M270 122c7 6 13 6 20 0"></path>
+            <path class="line-art" d="M240 205c-18 3-24 26-24 26M320 205c18 3 24 26 24 26"></path>
+
+            <circle class="colorable" data-part="c3-head" cx="445" cy="118" r="42"></circle>
+            <rect class="colorable" data-part="c3-body" x="408" y="164" width="74" height="86" rx="32"></rect>
+            <path class="line-art" d="M430 113h8M451 113h8M434 133c8 7 15 7 23 0"></path>
+            <path class="line-art" d="M408 196c-20 3-26 28-26 28M482 196c20 3 26 28 26 28"></path>
+          </svg>
+        </div>
+        <div class="palette">
+          <div class="swatches" id="swatches"></div>
+          <button class="btn" id="resetColor" type="button">reset color</button>
+        </div>
+        <p class="motif">choose a swatch, then click a shape -></p>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("dots");
+      const ctx = canvas.getContext("2d");
+      const status = document.getElementById("dotStatus");
+      const resetDotsBtn = document.getElementById("resetDots");
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+      const baseDots = [
+        { x: 0.5, y: 0.08 }, { x: 0.61, y: 0.38 }, { x: 0.95, y: 0.38 },
+        { x: 0.67, y: 0.58 }, { x: 0.78, y: 0.9 }, { x: 0.5, y: 0.7 },
+        { x: 0.22, y: 0.9 }, { x: 0.33, y: 0.58 }, { x: 0.05, y: 0.38 },
+        { x: 0.39, y: 0.38 }
+      ];
+
+      let dots = [];
+      let nextDot = 0;
+      let lines = [];
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.floor(rect.width * dpr);
+        canvas.height = Math.floor(rect.height * dpr);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        dots = baseDots.map((p) => ({ x: p.x * rect.width, y: p.y * rect.height }));
+        drawDots();
+      }
+
+      function drawDots() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        lines.forEach((line) => {
+          ctx.strokeStyle = "#111";
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          ctx.moveTo(line.a.x, line.a.y);
+          ctx.lineTo(line.b.x, line.b.y);
+          ctx.stroke();
+        });
+
+        dots.forEach((dot, i) => {
+          ctx.fillStyle = i < nextDot ? "#111" : "#fff";
+          ctx.strokeStyle = "#111";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, 8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#111";
+          ctx.font = "13px Manrope, sans-serif";
+          ctx.fillText(String(i + 1), dot.x + 11, dot.y - 10);
+        });
+      }
+
+      function distance(a, b) {
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+
+      function localPoint(e) {
+        const rect = canvas.getBoundingClientRect();
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      }
+
+      function tryConnect(point) {
+        const target = dots[nextDot];
+        if (!target) return;
+        if (distance(point, target) <= 18) {
+          if (nextDot > 0) {
+            lines.push({ a: dots[nextDot - 1], b: dots[nextDot] });
+          }
+          nextDot += 1;
+          if (nextDot >= dots.length) {
+            lines.push({ a: dots[dots.length - 1], b: dots[0] });
+            status.textContent = "done! you connected the sketch.";
+          } else {
+            status.textContent = "nice. now hit dot " + (nextDot + 1);
+          }
+          drawDots();
+        }
+      }
+
+      function resetDots() {
+        nextDot = 0;
+        lines = [];
+        status.textContent = "start from dot 1";
+        drawDots();
+      }
+
+      canvas.addEventListener("pointerdown", (e) => {
+        canvas.setPointerCapture(e.pointerId);
+        tryConnect(localPoint(e));
+      });
+
+      canvas.addEventListener("pointermove", (e) => {
+        if (e.buttons !== 1) return;
+        tryConnect(localPoint(e));
+      });
+
+      resetDotsBtn.addEventListener("click", resetDots);
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      const palette = ["#ffffff", "#f8edc9", "#f7d3d4", "#d9ebfb", "#dcefd4", "#f5e4cf", "#ddd3f2", "#111111"];
+      const swatches = document.getElementById("swatches");
+      const resetColorBtn = document.getElementById("resetColor");
+      const colorables = Array.from(document.querySelectorAll(".colorable"));
+      let selectedColor = palette[1];
+
+      function renderSwatches() {
+        swatches.innerHTML = "";
+        palette.forEach((color) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "swatch" + (selectedColor === color ? " selected" : "");
+          btn.style.background = color;
+          btn.setAttribute("aria-label", "Select color " + color);
+          btn.addEventListener("click", () => {
+            selectedColor = color;
+            renderSwatches();
+          });
+          swatches.appendChild(btn);
+        });
+      }
+
+      colorables.forEach((shape) => {
+        shape.addEventListener("click", () => {
+          shape.style.fill = selectedColor;
+        });
+      });
+
+      resetColorBtn.addEventListener("click", () => {
+        colorables.forEach((shape) => {
+          shape.style.fill = "#fff";
+        });
+      });
+
+      renderSwatches();
+    })();
+  </script>
+</body>
+</html>

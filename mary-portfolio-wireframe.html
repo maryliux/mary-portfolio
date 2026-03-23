@@ -1,0 +1,1400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mary Portfolio Wireframe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared-nav-footer.css" />
+  <style>
+    :root {
+      --bg: #f4f5f0;
+      --ink: #101010;
+      --muted: rgba(0, 0, 0, 0.44);
+      --placeholder: #d9d9d9;
+      --accent-purple: #40324a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Martian Mono", "Courier New", monospace;
+      position: relative;
+    }
+
+    /* Cursor: subtle drawn wash on the page (canvas) — fades, not a blur layer */
+    .page-aura-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
+    }
+    .aura-ripple-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .aura-ripple {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      margin: -11px 0 0 -11px;
+      border-radius: 50%;
+      border: 1px solid rgba(168, 132, 218, 0.45);
+      animation: auraRipple 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes auraRipple {
+      to {
+        transform: scale(5);
+        opacity: 0;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .page-aura-canvas,
+      .aura-ripple-layer {
+        display: none;
+      }
+    }
+
+    .page {
+      width: 1440px;
+      /* Snug to footer under intro; ~40–80px gap depending on wrap */
+      min-height: 2340px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      position: absolute;
+      left: 45px;
+      top: 276px;
+      width: 718px;
+    }
+    .hero h1 {
+      margin: 0;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: 48px;
+      line-height: 1.03;
+      text-transform: uppercase;
+      width: 683px;
+    }
+    .hero p.hero-sub {
+      margin: 25px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .hero-chips li {
+      margin: 0;
+    }
+    .hero-chip {
+      display: inline-block;
+      font-size: 11px;
+      line-height: 1.15;
+      text-transform: lowercase;
+      padding: 5px 10px;
+      border: 1px solid #dadad6;
+      border-radius: 5px;
+      background: #efefec;
+      color: #4d4d4d;
+    }
+    .hero-rotating {
+      display: inline-grid;
+      vertical-align: bottom;
+      color: var(--accent-purple);
+    }
+    /* Eraser-style wipe (clip-path), not crossfade */
+    .hero-phrase {
+      grid-area: 1 / 1;
+      clip-path: inset(0 100% 0 0);
+      transition: none;
+    }
+    .hero-phrase.is-visible {
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 0.55s cubic-bezier(0.45, 0, 0.2, 1);
+    }
+    .hero-phrase.is-visible.is-erasing {
+      clip-path: inset(0 0 0 100%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-phrase {
+        clip-path: none !important;
+        transition: none !important;
+        opacity: 0;
+      }
+      .hero-phrase.is-visible {
+        opacity: 1;
+      }
+      .hero-phrase.is-visible.is-erasing {
+        opacity: 0;
+      }
+    }
+
+    .section-title {
+      position: absolute;
+      left: 45px;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    /* —— Selected works: editorial cards — Post + Martian Mono, info always visible —— */
+    .work-section {
+      position: absolute;
+      left: 45px;
+      top: 852px;
+      width: 1350px;
+      padding-bottom: 80px;
+    }
+    .work-header {
+      margin: 0 0 28px;
+      padding: 0;
+      width: 100%;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      padding-bottom: 14px;
+    }
+    .work-heading {
+      margin: 0;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: clamp(22px, 2.4vw, 28px);
+      line-height: 1.05;
+      font-weight: 400;
+      text-transform: lowercase;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px 32px;
+      width: 100%;
+      align-items: stretch;
+    }
+    .work-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      overflow: visible;
+      transition: transform 0.35s ease;
+    }
+    .work-card:hover,
+    .work-card:focus-within {
+      transform: translateY(-2px);
+    }
+    .work-card-hit {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      text-decoration: none;
+      color: inherit;
+      outline: none;
+    }
+    .work-card-hit:focus-visible {
+      outline: 2px solid var(--accent-purple);
+      outline-offset: 3px;
+    }
+    .work-card-media {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      background: #e8e8e4;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      box-shadow: none;
+      transition: border-color 0.3s ease, box-shadow 0.35s ease;
+    }
+    .work-card:hover .work-card-media,
+    .work-card:focus-within .work-card-media {
+      border-color: rgba(64, 50, 74, 0.14);
+      box-shadow: 0 10px 36px rgba(0, 0, 0, 0.07);
+    }
+    .work-shot {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border: 0;
+      background: #deded8;
+      transition: transform 0.5s ease;
+    }
+    .work-card:hover .work-shot,
+    .work-card:focus-within .work-shot {
+      transform: scale(1.02);
+    }
+    /* Bottom-left pill: company · year (always visible) */
+    .work-card-badge {
+      position: absolute;
+      z-index: 3;
+      left: 14px;
+      bottom: 14px;
+      max-width: calc(100% - 28px);
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+    }
+    .work-card-badge__name {
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .work-card-badge__sep {
+      color: rgba(0, 0, 0, 0.35);
+      font-weight: 400;
+    }
+    .work-card-badge__date {
+      color: rgba(0, 0, 0, 0.42);
+      font-weight: 400;
+    }
+    /* Hover: gradient + title & description (above the pill) */
+    .work-card-reveal {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 18px 18px 62px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 42%, transparent 68%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .work-card:hover .work-card-reveal,
+    .work-card:focus-within .work-card-reveal {
+      opacity: 1;
+    }
+    .work-card-reveal__desc {
+      margin: 0;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 42em;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .work-card:hover,
+      .work-card:focus-within {
+        transform: none;
+      }
+      .work-card:hover .work-shot,
+      .work-card:focus-within .work-shot {
+        transform: none;
+      }
+      .work-card-reveal {
+        opacity: 1;
+      }
+    }
+
+    /* —— Mini intro (below selected works) — centered block —— */
+    .intro-section {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 1880px;
+      width: min(960px, calc(100% - 90px));
+      padding-bottom: 28px;
+    }
+    .intro-layout {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 48px 56px;
+    }
+    @media (max-width: 900px) {
+      .intro-layout {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .intro-copy {
+        justify-content: flex-start;
+      }
+      .polaroid-stack {
+        margin-top: 8px;
+        margin-bottom: 0;
+        align-self: center;
+      }
+    }
+    .intro-copy {
+      flex: 1 1 280px;
+      max-width: 32rem;
+      min-width: 0;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-self: stretch;
+      transform: translateY(-14px);
+    }
+    @media (max-width: 900px) {
+      .intro-copy {
+        transform: translateY(-8px);
+      }
+    }
+    .intro-lede {
+      margin: 0 0 14px;
+      font-family: "Post", "Arial Black", sans-serif;
+      font-size: clamp(17px, 1.5vw, 20px);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: var(--ink);
+    }
+    .intro-body {
+      margin: 0;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 11px;
+      line-height: 1.65;
+      letter-spacing: -0.01em;
+      color: var(--muted);
+    }
+    .intro-body + .intro-body {
+      margin-top: 12px;
+    }
+    .intro-highlight {
+      color: var(--accent-purple);
+    }
+    /* Polaroid stack */
+    .polaroid-stack {
+      position: relative;
+      width: 220px;
+      min-height: 300px;
+      flex-shrink: 0;
+      align-self: center;
+      margin-top: auto;
+      margin-bottom: auto;
+      perspective: 600px;
+    }
+    .polaroid {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+    }
+    .polaroid__inner {
+      position: relative;
+      background: linear-gradient(145deg, #fffffd 0%, #f4f2ea 100%);
+      padding: 14px 14px 18px;
+      border-radius: 2px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+        0 14px 28px rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition:
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    /* Photo-booth strip behind the portrait */
+    .intro-portrait-back {
+      position: absolute;
+      right: -6px;
+      top: 22px;
+      width: 200px;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+    .intro-portrait-back__photostrip {
+      transform: rotate(14deg) translateZ(0);
+      opacity: 0.9;
+      filter: saturate(0.94);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+      background: linear-gradient(180deg, #fffffd 0%, #f0ede6 100%);
+      border-radius: 3px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 10px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      width: 86px;
+      box-sizing: border-box;
+    }
+    .intro-portrait-back__perfs {
+      flex: 0 0 7px;
+      background-image: radial-gradient(
+        circle at 50% 50%,
+        rgba(0, 0, 0, 0.16) 1.2px,
+        transparent 1.4px
+      );
+      background-size: 6px 15px;
+      background-repeat: repeat-y;
+      background-position: center 4px;
+    }
+    .intro-portrait-back__frames {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding: 0 2px;
+    }
+    .intro-portrait-back__frame {
+      aspect-ratio: 3 / 4;
+      width: 100%;
+      border-radius: 1px;
+      background: linear-gradient(155deg, #e8e4da 0%, #d9d3c6 55%, #cec7b8 100%);
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .intro-portrait-back__frame--photo {
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+    .intro-portrait-back__img {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 42%;
+      filter: grayscale(100%) contrast(1.1) brightness(0.97);
+      -webkit-filter: grayscale(100%) contrast(1.1) brightness(0.97);
+    }
+    .intro-portrait-back__film-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .intro-portrait-back__film-overlay--vignette {
+      z-index: 1;
+      background: radial-gradient(
+        ellipse 88% 78% at 50% 48%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.08) 48%,
+        rgba(0, 0, 0, 0.26) 100%
+      );
+      mix-blend-mode: multiply;
+    }
+    .intro-portrait-back__film-overlay--grain {
+      z-index: 2;
+      opacity: 0.42;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 96px 96px;
+    }
+    /* Front polaroid */
+    .polaroid--front {
+      position: relative;
+      z-index: 1;
+      width: 200px;
+    }
+    .polaroid--front .polaroid__inner {
+      transform: rotate(-6deg) translateZ(0);
+    }
+    .polaroid--front:hover .polaroid__inner,
+    .polaroid--front:focus-within .polaroid__inner {
+      transform: rotate(-5deg) translateY(-8px) scale(1.02) translateZ(0);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.95) inset,
+        0 20px 44px rgba(64, 50, 74, 0.12),
+        0 8px 28px rgba(0, 0, 0, 0.08);
+    }
+    .polaroid--front:focus {
+      outline: none;
+    }
+    .polaroid--front:focus-visible .polaroid__inner {
+      box-shadow:
+        0 0 0 2px var(--accent-purple),
+        0 22px 48px rgba(64, 50, 74, 0.12);
+    }
+    .polaroid__shine {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: 2px;
+      background: linear-gradient(
+        125deg,
+        rgba(255, 255, 255, 0.45) 0%,
+        transparent 42%,
+        transparent 58%,
+        rgba(255, 255, 255, 0.08) 100%
+      );
+      opacity: 0.65;
+      mix-blend-mode: soft-light;
+    }
+    .polaroid__photo {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background: #e4e4de;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .polaroid-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+    }
+    /* B&W + film grain (SVG noise) + light vignette */
+    .polaroid-img--film {
+      position: relative;
+      z-index: 0;
+      filter: grayscale(100%) contrast(1.08) brightness(0.98);
+      -webkit-filter: grayscale(100%) contrast(1.08) brightness(0.98);
+    }
+    .polaroid-film-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .polaroid-film-overlay--vignette {
+      z-index: 1;
+      background: radial-gradient(
+        ellipse 85% 72% at 50% 45%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.06) 50%,
+        rgba(0, 0, 0, 0.22) 100%
+      );
+      mix-blend-mode: multiply;
+    }
+    .polaroid-film-overlay--grain {
+      z-index: 2;
+      opacity: 0.38;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 112px 112px;
+    }
+    .polaroid-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 10px;
+      line-height: 1.4;
+      text-align: center;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: rgba(0, 0, 0, 0.38);
+    }
+    .polaroid__photo:has(.polaroid-img[src]:not([src=""])) .polaroid-placeholder {
+      display: none;
+    }
+    .polaroid__caption {
+      margin: 14px 0 0;
+      padding: 0 4px;
+      font-family: "Martian Mono", ui-monospace, monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: lowercase;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.42);
+    }
+    .polaroid__caption em {
+      font-style: normal;
+      color: var(--accent-purple);
+      opacity: 0.85;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .polaroid__inner {
+        transition:
+          transform 0.35s ease,
+          box-shadow 0.35s ease;
+      }
+      .polaroid--front .polaroid__inner {
+        transform: rotate(0deg) translateZ(0);
+      }
+      .polaroid--front:hover .polaroid__inner,
+      .polaroid--front:focus-within .polaroid__inner {
+        transform: rotate(-3deg) translateY(-5px) scale(1.01) translateZ(0);
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.9) inset,
+          0 14px 32px rgba(0, 0, 0, 0.09);
+      }
+    }
+
+    .dots-panel {
+      position: absolute;
+      right: 24px;
+      top: 244px;
+      width: 560px;
+      padding: 0;
+    }
+    .paint-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: transparent;
+      overflow: hidden;
+    }
+    .paint-canvas-wrap--dots {
+      overflow: visible;
+    }
+    .dots-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .line-canvas {
+      pointer-events: none;
+      z-index: 2;
+    }
+    /* Inline SVG: flex-center + padding matches DOT_PAD; dots map from measured SVG box. */
+    .dots-art-host {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      box-sizing: border-box;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #dotsSvgArt {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      aspect-ratio: 347 / 302;
+    }
+    .paint-canvas-wrap--dots .dots-canvas {
+      z-index: 1;
+    }
+    .paint-controls {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .paint-btn {
+      font-family: "Martian Mono", monospace;
+      border: 1px solid #cfcfc9;
+      background: #efefe9;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 10px;
+      text-transform: lowercase;
+      color: #303030;
+      cursor: pointer;
+    }
+    .paint-btn:hover {
+      background: #e8e8e2;
+    }
+    .paint-note {
+      font-family: "Martian Mono", monospace;
+      font-size: 10px;
+      color: rgba(0,0,0,0.55);
+      margin-left: 2px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="pageAuraCanvas" class="page-aura-canvas" aria-hidden="true"></canvas>
+  <div class="aura-ripple-layer" aria-hidden="true"></div>
+  <main class="page">
+    <header class="topbar">
+      <a href="mary-portfolio-wireframe.html" class="brand magnetic">mary</a>
+      <nav class="nav" aria-label="Primary">
+        <a class="magnetic" aria-current="page" href="mary-portfolio-wireframe.html">work</a>
+        <a class="magnetic" href="mary-portfolio-play.html">play</a>
+        <a class="magnetic" href="mary-portfolio-about.html">about me</a>
+      </nav>
+    </header>
+    <section class="dots-panel" aria-label="Connect the dots">
+      <div class="paint-canvas-wrap paint-canvas-wrap--dots">
+        <div class="dots-art-host" aria-hidden="true">
+          <img id="dotsSvgArt" src="connect-art.svg" width="347" height="302" alt="" />
+        </div>
+        <canvas id="dotsPaintCanvas" class="dots-canvas"></canvas>
+        <canvas id="dotsLineCanvas" class="dots-canvas line-canvas"></canvas>
+      </div>
+      <div class="paint-controls">
+        <button class="paint-btn" id="clearDotLines" type="button">clear lines</button>
+        <button class="paint-btn" id="toggleDotGuide" type="button" aria-pressed="true">hide guides</button>
+        <span class="paint-note">drag to draw — follow 1, 2, 3… and see what you get</span>
+      </div>
+    </section>
+
+    <section class="hero">
+      <h1>Mary is a multimedia designer that believes in design that is evolving, impactful, and good for you.</h1>
+      <p class="hero-sub">
+        she's currently…
+        <span class="hero-rotating" aria-live="polite">
+          <span class="hero-phrase is-visible" data-hero-phrase>autolayouting</span>
+          <span class="hero-phrase" data-hero-phrase>making her 157th spotify playlist</span>
+          <span class="hero-phrase" data-hero-phrase>in the photo studio</span>
+          <span class="hero-phrase" data-hero-phrase>messing w/ her cat</span>
+        </span>
+      </p>
+      <ul class="hero-chips">
+        <li><span class="hero-chip magnetic">senior @ upenn</span></li>
+        <li><span class="hero-chip magnetic">based in philly</span></li>
+      </ul>
+    </section>
+    <script>
+      (() => {
+        const phrases = document.querySelectorAll('[data-hero-phrase]');
+        if (!phrases.length) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let i = 0;
+        const VISIBLE_MS = 2000;
+        const onEraseEnd = () => {
+          phrases[i].classList.remove('is-visible', 'is-erasing');
+          i = (i + 1) % phrases.length;
+          phrases[i].classList.add('is-visible');
+          phrases[i].addEventListener('transitionend', onRevealEnd, { once: true });
+        };
+        const onRevealEnd = () => {
+          setTimeout(startErase, VISIBLE_MS);
+        };
+        const startErase = () => {
+          phrases[i].classList.add('is-erasing');
+          phrases[i].addEventListener('transitionend', onEraseEnd, { once: true });
+        };
+        setTimeout(startErase, VISIBLE_MS);
+      })();
+    </script>
+
+    <section class="work-section" aria-labelledby="work-heading">
+      <header class="work-header">
+        <h2 id="work-heading" class="work-heading">selected works</h2>
+      </header>
+      <div class="work-grid">
+        <article class="work-card">
+          <a
+            class="work-card-hit"
+            href="case-study-altus-power.html"
+            aria-label="Altus Power, 2025. Availability dashboard — transforming analytical static Excel reports into a digital dashboard experience."
+          >
+            <div class="work-card-media">
+              <img
+                class="work-shot"
+                src="assets/case-studies/availability.png"
+                alt=""
+                loading="lazy"
+                width="800"
+                height="500"
+              />
+              <div class="work-card-reveal" aria-hidden="true">
+                <p class="work-card-reveal__desc">
+                  Transforming analytical static Excel reports into a digital dashboard experience.
+                </p>
+              </div>
+              <div class="work-card-badge">
+                <span class="work-card-badge__name">Altus Power</span><span class="work-card-badge__sep"> · </span><span class="work-card-badge__date">2025</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="work-card">
+          <a
+            class="work-card-hit"
+            href="case-study-roster.html"
+            aria-label="Altus Power, 2025. Commercial Customer Profiles — supporting the transition to in-house billing processes for B2B customer information."
+          >
+            <div class="work-card-media">
+              <img
+                class="work-shot"
+                src="assets/case-studies/roster.png"
+                alt=""
+                loading="lazy"
+                width="1024"
+                height="604"
+              />
+              <div class="work-card-reveal" aria-hidden="true">
+                <p class="work-card-reveal__desc">
+                  Supporting the transition to in-house billing processes for B2B customer information.
+                </p>
+              </div>
+              <div class="work-card-badge">
+                <span class="work-card-badge__name">Altus Power</span><span class="work-card-badge__sep"> · </span><span class="work-card-badge__date">2025</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="work-card">
+          <a
+            class="work-card-hit"
+            href="case-study-penn-pins.html"
+            aria-label="Penn Spark, 2025. Gamified social media app to encourage campus exploration."
+          >
+            <div class="work-card-media">
+              <img
+                class="work-shot"
+                src="assets/case-studies/penn-pins.png"
+                alt=""
+                loading="lazy"
+                width="1024"
+                height="604"
+              />
+              <div class="work-card-reveal" aria-hidden="true">
+                <p class="work-card-reveal__desc">
+                  Gamified social media app to encourage campus exploration.
+                </p>
+              </div>
+              <div class="work-card-badge">
+                <span class="work-card-badge__name">Penn Spark</span><span class="work-card-badge__sep"> · </span><span class="work-card-badge__date">2025</span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="work-card">
+          <a
+            class="work-card-hit"
+            href="case-study-capsule.html"
+            aria-label="Capsule, 2025. Digital journaling as a hunter-gatherer process."
+          >
+            <div class="work-card-media">
+              <img
+                class="work-shot"
+                src="assets/case-studies/capsule.png"
+                alt=""
+                loading="lazy"
+                width="1024"
+                height="604"
+              />
+              <div class="work-card-reveal" aria-hidden="true">
+                <p class="work-card-reveal__desc">
+                  Digital journaling as a hunter-gatherer process.
+                </p>
+              </div>
+              <div class="work-card-badge">
+                <span class="work-card-badge__name">Capsule</span><span class="work-card-badge__sep"> · </span><span class="work-card-badge__date">2025</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="intro-section" aria-label="Introduction">
+      <div class="intro-layout">
+        <div class="intro-copy">
+          <p class="intro-lede">hi, i'm mary liu</p>
+          <p class="intro-body">
+            i'm currently a senior @ upenn studying cognitive science + fine arts. i've worked with <span class="intro-highlight">b2b and b2c, as well as mobile and desktop web apps.</span>
+          </p>
+          <p class="intro-body">
+            i design because it <span class="intro-highlight">brings joy, convenience, and people together</span>. creating simple products is easy, but making a product simple is hard; that's the challenge i love about building.
+          </p>
+        </div>
+        <div class="polaroid-stack" role="group" aria-label="Portrait and photostrip">
+          <div class="intro-portrait-back" aria-hidden="true">
+            <div class="intro-portrait-back__photostrip">
+              <span class="intro-portrait-back__perfs" aria-hidden="true"></span>
+              <div class="intro-portrait-back__frames">
+                <div class="intro-portrait-back__frame intro-portrait-back__frame--photo">
+                  <img
+                    class="intro-portrait-back__img"
+                    src="assets/photostrip-outdoor.png"
+                    alt=""
+                    width="600"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="intro-portrait-back__film-overlay intro-portrait-back__film-overlay--vignette" aria-hidden="true"></span>
+                  <span class="intro-portrait-back__film-overlay intro-portrait-back__film-overlay--grain" aria-hidden="true"></span>
+                </div>
+                <div class="intro-portrait-back__frame intro-portrait-back__frame--photo">
+                  <img
+                    class="intro-portrait-back__img"
+                    src="assets/photostrip-outdoor.png"
+                    alt=""
+                    width="600"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="intro-portrait-back__film-overlay intro-portrait-back__film-overlay--vignette" aria-hidden="true"></span>
+                  <span class="intro-portrait-back__film-overlay intro-portrait-back__film-overlay--grain" aria-hidden="true"></span>
+                </div>
+                <div class="intro-portrait-back__frame intro-portrait-back__frame--photo">
+                  <img
+                    class="intro-portrait-back__img"
+                    src="assets/photostrip-outdoor.png"
+                    alt=""
+                    width="600"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="intro-portrait-back__film-overlay intro-portrait-back__film-overlay--vignette" aria-hidden="true"></span>
+                  <span class="intro-portrait-back__film-overlay intro-portrait-back__film-overlay--grain" aria-hidden="true"></span>
+                </div>
+              </div>
+              <span class="intro-portrait-back__perfs" aria-hidden="true"></span>
+            </div>
+          </div>
+          <figure class="polaroid polaroid--front" tabindex="0" aria-label="Portrait">
+            <div class="polaroid__inner">
+              <div class="polaroid__shine" aria-hidden="true"></div>
+              <div class="polaroid__photo polaroid__photo--film">
+                <img
+                  class="polaroid-img polaroid-img--film"
+                  src="assets/portrait-polaroid.png"
+                  alt="Mary Liu with a cat on her lap."
+                  width="400"
+                  height="400"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="polaroid-film-overlay polaroid-film-overlay--vignette" aria-hidden="true"></span>
+                <span class="polaroid-film-overlay polaroid-film-overlay--grain" aria-hidden="true"></span>
+              </div>
+              <figcaption class="polaroid__caption">this is me!</figcaption>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" aria-label="Site footer" id="siteFooter">
+    <div class="site-footer__stars" id="siteFooterStars" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <h2 class="site-footer__title">
+        thanks for visiting. everyone leaves something in their path. what will your mark be?
+      </h2>
+      <p class="site-footer__credit">made with lots of jujube tea ⋆☕︎˖</p>
+
+      <nav class="site-footer__links" aria-label="Links">
+        <a class="site-footer__link" href="https://drive.google.com/file/d/1aDOR498S0hrAOGXYXMxbqq_hmDT0Ccwl/view" target="_blank" rel="noopener noreferrer">grab my resume</a>
+        <a class="site-footer__link" href="https://www.linkedin.com/in/maryliux" target="_blank" rel="noopener noreferrer">linkedin</a>
+        <a class="site-footer__link" href="https://medium.com/@maryliu_37197" target="_blank" rel="noopener noreferrer">medium</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="footer-stars.js" defer></script>
+  <script>
+    (() => {
+      const W = 560;
+      const H = 280;
+      const dotsPaint = document.getElementById('dotsPaintCanvas');
+      const dotsLine = document.getElementById('dotsLineCanvas');
+      const dCtx = dotsPaint.getContext('2d');
+      const lCtx = dotsLine.getContext('2d');
+      const clearDotBtn = document.getElementById('clearDotLines');
+      const guideBtn = document.getElementById('toggleDotGuide');
+      let showDotGuide = true;
+
+      function syncGuideButton() {
+        guideBtn.textContent = showDotGuide ? 'hide guides' : 'show guides';
+        guideBtn.setAttribute('aria-pressed', showDotGuide ? 'true' : 'false');
+      }
+
+      /**
+       * Dot centers from Group 1.svg (same order as in file). Art: connect-art.svg = cat.svg outline + Group 1 face.
+       * ViewBox 0 0 347 302 — mapSVGToCanvas() uses rendered #dotsSvgArt (img) vs canvas.
+       */
+      const DOT_PAD = 16;
+      const SVG_W = 347;
+      const SVG_H = 302;
+      const baseDots = [
+        [344.5, 32.5], [332.5, 57.5], [332.5, 88.5], [341.5, 123.5], [326.5, 161.5], [297.5, 183.5], [262.5, 185.5], [242.5, 183.5], [206.5, 161.5], [255.5, 188.5], [237.5, 223.5], [232.5, 241.5], [250.5, 265.5], [221.5, 277.5], [193.5, 234.5], [204.5, 199.5], [191.5, 229.5], [170.5, 227.5], [175.5, 199.5], [159.5, 260.5], [176.5, 277.5], [151.5, 287.5], [133.5, 285.5], [119.5, 252.5], [138.5, 173.5], [99.5, 260.5], [114.5, 257.5], [78.5, 277.5], [22.5, 224.5], [83.5, 288.5], [82.5, 299.5], [46.5, 299.5], [10.5, 239.5], [2.5, 191.5], [25.5, 147.5], [30.5, 120.5], [99.5, 54.5], [170.5, 38.5], [240.5, 34.5], [252.5, 7.5], [263.5, 2.5], [273.5, 9.5], [273.5, 31.5], [306.5, 40.5], [330.5, 31.5]
+      ];
+
+      function mapSVGToCanvasFallback(sx, sy) {
+        const cw = dotsPaint.clientWidth || W;
+        const ch = dotsPaint.clientHeight || H;
+        const iw = cw - 2 * DOT_PAD;
+        const ih = ch - 2 * DOT_PAD;
+        const svgAspect = SVG_W / SVG_H;
+        const boxAspect = iw / ih;
+        let dispW; let dispH; let offX; let offY;
+        if (boxAspect > svgAspect) {
+          dispH = ih;
+          dispW = ih * svgAspect;
+          offX = (iw - dispW) / 2;
+          offY = 0;
+        } else {
+          dispW = iw;
+          dispH = iw / svgAspect;
+          offX = 0;
+          offY = (ih - dispH) / 2;
+        }
+        return [
+          DOT_PAD + offX + (sx / SVG_W) * dispW,
+          DOT_PAD + offY + (sy / SVG_H) * dispH
+        ];
+      }
+
+      function mapSVGToCanvas(sx, sy) {
+        const svg = document.getElementById('dotsSvgArt');
+        const pr = dotsPaint.getBoundingClientRect();
+        if (!svg || pr.width < 1) return mapSVGToCanvasFallback(sx, sy);
+        const r = svg.getBoundingClientRect();
+        if (r.width < 0.5 || r.height < 0.5) return mapSVGToCanvasFallback(sx, sy);
+        const scale = Math.min(r.width / SVG_W, r.height / SVG_H);
+        const ox = (r.width - SVG_W * scale) / 2;
+        const oy = (r.height - SVG_H * scale) / 2;
+        const px = r.left - pr.left + ox + sx * scale;
+        const py = r.top - pr.top + oy + sy * scale;
+        return [px, py];
+      }
+
+      /** Pre-draw connector from dot 1 → 20 so users see how it works */
+      const PREFILL_DOT_COUNT = 20;
+
+      /** ~1 SVG user unit in canvas px (uniform scale from mapSVGToCanvas) */
+      function svgUnitScale() {
+        const a = mapSVGToCanvas(0, 0);
+        const bx = mapSVGToCanvas(1, 0);
+        const cy = mapSVGToCanvas(0, 1);
+        return (Math.hypot(bx[0] - a[0], bx[1] - a[1]) + Math.hypot(cy[0] - a[0], cy[1] - a[1])) / 2;
+      }
+
+      /**
+       * Sketchy crayon-like stroke: layered semi-transparent passes with perpendicular jitter
+       * plus light grain — reads more like wax crayon than a vector pen.
+       */
+      function crayonLine(ctx, x0, y0, x1, y1, opts = {}) {
+        const baseW = opts.lineWidth ?? 2.8;
+        let passes = opts.passes ?? 8;
+        const px = x1 - x0;
+        const py = y1 - y0;
+        const len = Math.hypot(px, py) || 0.001;
+        if (len < 0.4) passes = Math.min(passes, 4);
+        const ux = px / len;
+        const uy = py / len;
+        const nx = -uy;
+        const ny = ux;
+
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        for (let i = 0; i < passes; i++) {
+          const offN = (Math.sin(i * 2.1) * 0.45 + (Math.random() - 0.5)) * baseW * 0.78;
+          const jx = (Math.random() - 0.5) * 0.65;
+          const jy = (Math.random() - 0.5) * 0.65;
+          const w = baseW * (0.26 + Math.random() * 0.52);
+          const gray = 14 + Math.floor(Math.random() * 24);
+          ctx.globalAlpha = 0.12 + Math.random() * 0.14;
+          ctx.strokeStyle = `rgb(${gray},${gray},${gray})`;
+          ctx.lineWidth = w;
+          ctx.beginPath();
+          ctx.moveTo(x0 + nx * offN + jx, y0 + ny * offN + jy);
+          ctx.lineTo(x1 + nx * offN + jx, y1 + ny * offN + jy);
+          ctx.stroke();
+        }
+
+        const grainCount = Math.min(16, Math.max(2, Math.floor(len / 2.2)));
+        for (let g = 0; g < grainCount; g++) {
+          const u = (g + 0.25 + Math.random() * 0.5) / grainCount;
+          const gx = x0 + ux * len * u + nx * (Math.random() - 0.5) * baseW * 0.5;
+          const gy = y0 + uy * len * u + ny * (Math.random() - 0.5) * baseW * 0.5;
+          ctx.globalAlpha = 0.16 + Math.random() * 0.32;
+          const ggray = 10 + Math.floor(Math.random() * 30);
+          ctx.fillStyle = `rgb(${ggray},${ggray},${ggray})`;
+          ctx.beginPath();
+          ctx.arc(gx, gy, 0.12 + Math.random() * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 0.42;
+        ctx.strokeStyle = '#141414';
+        ctx.lineWidth = baseW * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      /** Simple dot eyes on the head (SVG space), paint layer */
+      function drawDotEyesPredraw() {
+        const u = svgUnitScale();
+        if (!u || u < 0.01) return;
+        const cx = 298;
+        const cy = 95;
+        const r = 1.5 * u;
+        dCtx.fillStyle = '#141414';
+        const [lx, ly] = mapSVGToCanvas(cx - 10.5, cy);
+        const [rx, ry] = mapSVGToCanvas(cx + 9.5, cy + 0.5);
+        dCtx.beginPath();
+        dCtx.arc(lx, ly, r, 0, Math.PI * 2);
+        dCtx.fill();
+        dCtx.beginPath();
+        dCtx.arc(rx, ry, r * 0.95, 0, Math.PI * 2);
+        dCtx.fill();
+      }
+
+      function drawPrefilledConnector() {
+        if (baseDots.length < 2 || PREFILL_DOT_COUNT < 2) return;
+        const n = Math.min(PREFILL_DOT_COUNT, baseDots.length);
+        for (let i = 0; i < n - 1; i++) {
+          const [bx0, by0] = baseDots[i];
+          const [bx1, by1] = baseDots[i + 1];
+          const [px0, py0] = mapSVGToCanvas(bx0, by0);
+          const [px1, py1] = mapSVGToCanvas(bx1, by1);
+          crayonLine(dCtx, px0, py0, px1, py1, { lineWidth: 2.8, passes: 8 });
+        }
+      }
+
+      function drawPredrawnStarter() {
+        drawPrefilledConnector();
+        drawDotEyesPredraw();
+      }
+
+      function drawDotsGuide() {
+        const w = dotsLine.clientWidth;
+        const h = dotsLine.clientHeight;
+        lCtx.clearRect(0, 0, w, h);
+        if (!showDotGuide) {
+          drawDotsOnly();
+          return;
+        }
+        lCtx.strokeStyle = 'rgba(30,30,30,0.28)';
+        lCtx.lineWidth = 1.8;
+        lCtx.lineCap = 'round';
+        lCtx.lineJoin = 'round';
+        lCtx.setLineDash([6, 5]);
+        const pathPts = baseDots.map(([bx, by]) => mapSVGToCanvas(bx, by));
+        lCtx.beginPath();
+        pathPts.forEach((p, i) => {
+          if (i === 0) lCtx.moveTo(p[0], p[1]);
+          else lCtx.lineTo(p[0], p[1]);
+        });
+        lCtx.stroke();
+        lCtx.setLineDash([]);
+        drawDotsOnly();
+      }
+
+      function drawDotsOnly() {
+        const w = dotsLine.clientWidth;
+        const h = dotsLine.clientHeight;
+        if (!showDotGuide) lCtx.clearRect(0, 0, w, h);
+        baseDots.forEach(([bx, by], i) => {
+          const [px, py] = mapSVGToCanvas(bx, by);
+          const r = 1.6;
+          lCtx.beginPath();
+          lCtx.fillStyle = '#4a5852';
+          lCtx.arc(px, py, r, 0, Math.PI * 2);
+          lCtx.fill();
+          lCtx.fillStyle = 'rgba(0,0,0,0.55)';
+          lCtx.font = '9px Martian Mono, monospace';
+          const lbl = String(i + 1);
+          const tx = Math.min(w - 10, Math.max(DOT_PAD, px + 6));
+          const ty = Math.max(11, py - 6);
+          lCtx.fillText(lbl, tx, ty);
+        });
+      }
+
+      function setDotsSize() {
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const cw = dotsPaint.clientWidth;
+        const ch = dotsPaint.clientHeight;
+        [dotsPaint, dotsLine].forEach((c) => {
+          c.width = Math.floor(cw * dpr);
+          c.height = Math.floor(ch * dpr);
+        });
+        dCtx.setTransform(1, 0, 0, 1, 0, 0);
+        dCtx.scale(dpr, dpr);
+        lCtx.setTransform(1, 0, 0, 1, 0, 0);
+        lCtx.scale(dpr, dpr);
+        dCtx.fillStyle = '#f4f5f0';
+        dCtx.fillRect(0, 0, cw, ch);
+        drawPredrawnStarter();
+        drawDotsGuide();
+        requestAnimationFrame(() => {
+          dCtx.fillStyle = '#f4f5f0';
+          dCtx.fillRect(0, 0, cw, ch);
+          drawPredrawnStarter();
+          drawDotsGuide();
+        });
+      }
+
+      let drawing = false;
+      let last = null;
+      function getPt(e, canvas) {
+        const r = canvas.getBoundingClientRect();
+        return { x: e.clientX - r.left, y: e.clientY - r.top };
+      }
+      function stroke(a, b) {
+        crayonLine(dCtx, a.x, a.y, b.x, b.y, { lineWidth: 2.8, passes: 8 });
+      }
+      dotsPaint.addEventListener('pointerdown', (e) => {
+        drawing = true;
+        last = getPt(e, dotsPaint);
+        dotsPaint.setPointerCapture(e.pointerId);
+      });
+      dotsPaint.addEventListener('pointermove', (e) => {
+        if (!drawing) return;
+        const p = getPt(e, dotsPaint);
+        stroke(last, p);
+        last = p;
+      });
+      dotsPaint.addEventListener('pointerup', () => { drawing = false; last = null; });
+      dotsPaint.addEventListener('pointerleave', () => { drawing = false; last = null; });
+
+      clearDotBtn.addEventListener('click', () => {
+        const cw = dotsPaint.clientWidth;
+        const ch = dotsPaint.clientHeight;
+        dCtx.fillStyle = '#f4f5f0';
+        dCtx.fillRect(0, 0, cw, ch);
+        drawPredrawnStarter();
+      });
+      guideBtn.addEventListener('click', () => {
+        showDotGuide = !showDotGuide;
+        syncGuideButton();
+        drawDotsGuide();
+      });
+
+      window.addEventListener('resize', setDotsSize);
+      syncGuideButton();
+      setDotsSize();
+    })();
+  </script>
+  <script>
+    (() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const rippleLayer = document.querySelector('.aura-ripple-layer');
+      const auraCanvas = document.getElementById('pageAuraCanvas');
+      const actx = auraCanvas && auraCanvas.getContext('2d');
+      let auraPress = false;
+      let lastAuraX = null;
+      let lastAuraY = null;
+      let cssW = window.innerWidth;
+      let cssH = window.innerHeight;
+
+      function resizeAuraCanvas() {
+        if (!auraCanvas || !actx) return;
+        cssW = window.innerWidth;
+        cssH = window.innerHeight;
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        auraCanvas.width = Math.floor(cssW * dpr);
+        auraCanvas.height = Math.floor(cssH * dpr);
+        auraCanvas.style.width = `${cssW}px`;
+        auraCanvas.style.height = `${cssH}px`;
+        actx.setTransform(1, 0, 0, 1, 0, 0);
+        actx.scale(dpr, dpr);
+        lastAuraX = null;
+        lastAuraY = null;
+      }
+
+      /** Fade existing strokes (destination-in) so marks gently disappear */
+      function fadeAuraLayer() {
+        if (!actx) return;
+        actx.globalCompositeOperation = 'destination-in';
+        actx.fillStyle = 'rgba(255, 255, 255, 0.93)';
+        actx.fillRect(0, 0, cssW, cssH);
+        actx.globalCompositeOperation = 'source-over';
+      }
+
+      function auraLoop() {
+        fadeAuraLayer();
+        requestAnimationFrame(auraLoop);
+      }
+
+      if (actx) {
+        resizeAuraCanvas();
+        window.addEventListener('resize', resizeAuraCanvas);
+        requestAnimationFrame(auraLoop);
+      }
+
+      /* Soft lavender-amethyst — reads warm on cream, matches site purple */
+      const auraR = 168;
+      const auraG = 132;
+      const auraB = 218;
+
+      document.addEventListener(
+        'pointermove',
+        (e) => {
+          if (!e.isPrimary || !actx) return;
+          const x = e.clientX;
+          const y = e.clientY;
+          const baseA = auraPress ? 0.095 : 0.052;
+          const w = auraPress ? 22 : 15;
+          actx.lineCap = 'round';
+          actx.lineJoin = 'round';
+          actx.lineWidth = w;
+          actx.strokeStyle = `rgba(${auraR}, ${auraG}, ${auraB}, ${baseA})`;
+          if (lastAuraX == null || lastAuraY == null) {
+            lastAuraX = x;
+            lastAuraY = y;
+            return;
+          }
+          actx.beginPath();
+          actx.moveTo(lastAuraX, lastAuraY);
+          actx.lineTo(x, y);
+          actx.stroke();
+          lastAuraX = x;
+          lastAuraY = y;
+        },
+        { passive: true }
+      );
+
+      document.addEventListener('pointerdown', (e) => {
+        if (!e.isPrimary) return;
+        auraPress = true;
+        const skip = e.target.closest(
+          'canvas, button, input, textarea, select, a, .paint-btn'
+        );
+        if (!rippleLayer || skip) return;
+        const r = document.createElement('span');
+        r.className = 'aura-ripple';
+        r.style.left = `${e.clientX}px`;
+        r.style.top = `${e.clientY}px`;
+        rippleLayer.appendChild(r);
+        r.addEventListener('animationend', () => r.remove(), { once: true });
+      });
+      document.addEventListener('pointerup', () => {
+        auraPress = false;
+      });
+      document.addEventListener('pointercancel', () => {
+        auraPress = false;
+      });
+      window.addEventListener('blur', () => {
+        auraPress = false;
+      });
+
+    })();
+  </script>
+  <script src="magnetic-hover.js" defer></script>
+</body>
+</html>

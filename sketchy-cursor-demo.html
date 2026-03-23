@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sketchy Cursor - Mary</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Patrick Hand, system-ui, sans-serif; margin:0; min-height:100vh; background:#fbfdf8;}
+  .demo{max-width:1100px;margin:48px auto;padding:34px;background:linear-gradient(#fff,#fbfbf6);border-radius:12px;box-shadow:0 12px 28px rgba(10,15,10,0.06); position:relative;}
+  h1{font-family:Permanent Marker, Patrick Hand; color:#0b1a13; margin:0 0 8px; font-size:28px;}
+  p{color:#444;margin:0 0 8px;}
+
+  #cursorTrail, #sketchCursor { position: fixed; top:0; left:0; pointer-events: none; z-index: 9999; }
+  #cursorTrail { width:100vw; height:100vh; }
+
+  #sketchCursor {
+    transform: translate(-50%,-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    transition: transform 160ms linear, opacity 160ms ease;
+    mix-blend-mode:multiply;
+    will-change: transform, left, top;
+  }
+
+  #cursorScribble { width:100px; height:30px; overflow:visible; display:block; }
+  #cursorScribble path { stroke: #1a2b20; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; fill:none; opacity:0.92; }
+
+  #cursorBadge {
+    background: rgba(255,255,255,0.96);
+    border-radius:8px;
+    padding:10px 12px;
+    max-width:340px;
+    box-shadow: 0 10px 22px rgba(10,15,10,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+    transform-origin:center;
+    text-align:left;
+    font-family: Patrick Hand, 'Permanent Marker', system-ui, sans-serif;
+  }
+  #badgeMain{ font-size:13px;color:#0b1a13;line-height:1.15;font-weight:600; }
+  #badgeSub{ font-size:11px;color:#6d6a66;margin-top:6px;opacity:0.95; }
+
+  #sketchCursor.enlarge { transform: translate(-50%,-50%) scale(1.08) rotate(-1deg); }
+  #sketchCursor.shrink { transform: translate(-50%,-50%) scale(0.92); opacity:0.78; }
+
+  * { cursor: none; }
+  .keyboard-mode { cursor: default !important; }
+  .keyboard-mode * { cursor: default !important; }
+
+  @media (pointer: coarse) {
+    * { cursor: auto; }
+    #cursorTrail, #sketchCursor { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo">
+  <h1>mary - multimedia designer</h1>
+  <p>Sketchy cursor demo. Move your pointer to see the badge and scribble motif.</p>
+  <p>Interactive elements enlarge cursor: <a href="#">link</a>, <button type="button">button</button></p>
+</div>
+
+<canvas id="cursorTrail"></canvas>
+
+<div id="sketchCursor" aria-hidden="true">
+  <svg id="cursorScribble" viewBox="0 0 120 40" preserveAspectRatio="none">
+    <path d="M4,30 C20,6 40,6 60,30 C80,54 100,6 116,28"></path>
+  </svg>
+
+  <div id="cursorBadge">
+    <div id="badgeMain">hi, im mary. im a multimedia designer that believes in design that is evolving, impactful, and good for you.</div>
+    <div id="badgeSub">she's currently... picking produce, autolayouting, and making her 157th spotify playlist</div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const cursor = document.getElementById('sketchCursor');
+  const trail = document.getElementById('cursorTrail');
+  const badgeMain = document.getElementById('badgeMain');
+  const path = document.querySelector('#cursorScribble path');
+  const ctx = trail.getContext('2d');
+  const finePointer = window.matchMedia('(pointer:fine)').matches;
+
+  if (!finePointer) return;
+
+  function fit() {
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    trail.width = Math.floor(w * dpr);
+    trail.height = Math.floor(h * dpr);
+    trail.style.width = w + 'px';
+    trail.style.height = h + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+  }
+  fit();
+  addEventListener('resize', fit);
+
+  const mouse = { x: innerWidth/2, y: innerHeight/2 };
+  const pos = { x: innerWidth/2, y: innerHeight/2 };
+  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  addEventListener('pointerdown', ()=> cursor.classList.add('enlarge'));
+  addEventListener('pointerup', ()=> cursor.classList.remove('enlarge'));
+
+  const points = [];
+  const MAX_POINTS = 38;
+
+  function onInteractive(target) {
+    return !!target.closest('a, button, input, textarea, select, [role="button"]');
+  }
+
+  addEventListener('pointermove', (e) => {
+    if (onInteractive(e.target)) {
+      cursor.classList.add('enlarge');
+    } else {
+      cursor.classList.remove('enlarge');
+    }
+  });
+
+  function keyboardModeOn() {
+    document.documentElement.classList.add('keyboard-mode');
+    cursor.style.display = 'none';
+    trail.style.display = 'none';
+  }
+
+  function keyboardModeOff() {
+    document.documentElement.classList.remove('keyboard-mode');
+    cursor.style.display = '';
+    trail.style.display = '';
+  }
+
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') keyboardModeOn();
+  });
+  addEventListener('pointerdown', keyboardModeOff);
+
+  function tick(){
+    pos.x += (mouse.x - pos.x) * 0.22;
+    pos.y += (mouse.y - pos.y) * 0.22;
+
+    cursor.style.left = pos.x + 'px';
+    cursor.style.top = pos.y + 'px';
+
+    const dx = mouse.x - pos.x;
+    const dy = mouse.y - pos.y;
+    const speed = Math.min(20, Math.sqrt(dx * dx + dy * dy));
+    const wobble = Math.sin(performance.now() * 0.012) * 2.2;
+    const y1 = 30 - wobble;
+    const y2 = 6 + wobble;
+    const y3 = 30 - wobble * 0.6;
+    const y4 = 54 + wobble * 0.5;
+    const y5 = 6 + wobble * 0.8;
+    const y6 = 28 - wobble * 0.4;
+    path.setAttribute('d', `M4,${y1.toFixed(2)} C20,${y2.toFixed(2)} 40,${y2.toFixed(2)} 60,${y3.toFixed(2)} C80,${y4.toFixed(2)} 100,${y5.toFixed(2)} 116,${y6.toFixed(2)}`);
+
+    if (speed > 8) cursor.classList.add('shrink');
+    else cursor.classList.remove('shrink');
+
+    points.push({ x: pos.x, y: pos.y, life: 1 });
+    if (points.length > MAX_POINTS) points.shift();
+
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    for (let i = points.length - 1; i >= 0; i--) {
+      points[i].life -= 0.03;
+      if (points[i].life <= 0) points.splice(i, 1);
+    }
+
+    for (let i = 1; i < points.length; i++) {
+      const p0 = points[i - 1];
+      const p1 = points[i];
+      const alpha = Math.max(0, p1.life * 0.22);
+      ctx.strokeStyle = `rgba(26,43,32,${alpha})`;
+      ctx.lineWidth = 1 + p1.life * 2;
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  badgeMain.textContent = "hi, im mary. im a multimedia designer that believes in design that is evolving, impactful, and good for you.";
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

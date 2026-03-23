@@ -1,0 +1,39 @@
+How to put this site on GitHub and go live
+==========================================
+
+This folder (mary-portfolio-site) is a copy of your portfolio HTML/CSS/JS and assets,
+ready to track with Git without uploading your whole Documents folder.
+
+1) Create a new repository on GitHub
+   - https://github.com/new
+   - Name it (for example: mary-portfolio)
+   - Leave it empty (no README, no .gitlicense) so pushes are simple.
+
+2) In Terminal, run (replace YOUR_USER and YOUR_REPO):
+
+   cd "/Users/mary/Desktop/mary-portfolio-site"
+   git init
+   git add .
+   git commit -m "Initial portfolio site"
+   git branch -M main
+   git remote add origin https://github.com/maryliux/mary-portfolio.git
+   git push -u origin main
+
+3) Turn on GitHub Pages (free hosting)
+   - On the repo: Settings → Pages
+   - Source: Deploy from a branch
+   - Branch: main, folder: / (root)
+   - Save. After a minute or two your site will be at:
+     https://YOUR_USER.github.io/YOUR_REPO/
+
+4) Keeping the copy in sync
+   - When you change files in Documents, copy them into mary-portfolio-site again
+     (or edit only inside mary-portfolio-site from now on), then:
+
+   git add .
+   git commit -m "Describe your change"
+   git push
+
+Optional: GitHub Desktop
+   - File → Add Local Repository → choose mary-portfolio-site
+   - Publish repository to GitHub from the app

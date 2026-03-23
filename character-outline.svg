@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="400" height="320" fill="none" aria-hidden="true">
+  <!-- Outer silhouette: base, arm, thumb, inner arm, head, shoulder -->
+  <path
+    stroke="#1a1a1a"
+    stroke-width="2.3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M 332 268
+       L 268 272  168 274  88 262
+       C 48 252  24 218  20 168
+       C 16 118  28 62  52 28
+       C 72 8  92 8  108 32
+       C 122 58  128 95  118 132
+       C 108 172  138 210  198 218
+       C 258 218  288 198  302 152
+       C 316 102  318 58  326 28
+       C 332 8  348 8  368 8
+       C 392 8  398 38  396 88
+       C 396 158  392 228  388 258
+       C 368 278  348 272 332 268 Z" />
+  <!-- Face -->
+  <circle cx="358" cy="92" r="2.8" fill="#1a1a1a"/>
+  <circle cx="378" cy="92" r="2.8" fill="#1a1a1a"/>
+  <circle cx="368" cy="110" r="2.2" fill="#1a1a1a"/>
+  <path stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" d="M 348 128 Q 368 142  388 128"/>
+</svg>

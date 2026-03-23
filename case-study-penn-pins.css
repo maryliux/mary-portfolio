@@ -1,0 +1,130 @@
+/* Penn Pins — cool purple accents (scoped; does not affect other case studies) */
+
+.case-study--penn-pins {
+  --accent-green: #6d5b8f;
+  --accent-green-soft: rgba(109, 91, 143, 0.14);
+  --accent-green-mid: rgba(130, 110, 170, 0.42);
+  --accent-green-wash: rgba(232, 228, 244, 0.96);
+}
+
+.case-study--penn-pins .case-study__playful {
+  border-color: rgba(109, 91, 143, 0.32);
+}
+
+.case-study--penn-pins .case-study__playful:hover,
+.case-study--penn-pins .case-study__playful:focus-within {
+  border-color: rgba(130, 110, 170, 0.45);
+  box-shadow: 0 12px 32px rgba(109, 91, 143, 0.12);
+}
+
+.case-study--penn-pins .case-study__playful--static:hover,
+.case-study--penn-pins .case-study__playful--static:focus-within {
+  border-color: rgba(109, 91, 143, 0.32);
+}
+
+.case-study--penn-pins .case-study__arrow-line {
+  background: linear-gradient(
+    180deg,
+    rgba(150, 130, 190, 0.22),
+    rgba(109, 91, 143, 0.45)
+  );
+}
+
+.case-study--penn-pins .case-study__insight-tile:hover {
+  border-color: rgba(130, 110, 170, 0.28);
+}
+
+.case-study--penn-pins .case-study__constraint-board {
+  border-color: rgba(109, 91, 143, 0.28);
+}
+
+.case-study--penn-pins .case-study__constraint-list li {
+  border-left-color: rgba(130, 110, 170, 0.45);
+  background: rgba(232, 228, 244, 0.4);
+}
+
+.case-study--penn-pins .case-study__toc a.is-active,
+.case-study--penn-pins .case-study__toc a[aria-current="location"] {
+  color: var(--accent-green);
+}
+
+.case-study--penn-pins .case-study__email {
+  border-bottom-color: rgba(109, 91, 143, 0.35);
+}
+
+.case-study--penn-pins .case-study__stat-board {
+  border-color: rgba(109, 91, 143, 0.18);
+}
+
+.case-study--penn-pins .case-study__takeaway-dot {
+  background: rgba(130, 110, 170, 0.55);
+  box-shadow: 0 0 0 3px var(--accent-green-wash);
+}
+
+@media (max-width: 900px) {
+  .case-study--penn-pins .case-study__toc a.is-active {
+    border-bottom-color: var(--accent-green-mid);
+  }
+
+  .case-study--penn-pins .case-study__arrow-line {
+    background: linear-gradient(
+      90deg,
+      rgba(150, 130, 190, 0.22),
+      rgba(109, 91, 143, 0.45)
+    );
+  }
+}
+
+/* Space between feature list (sticker tray) and Pivot */
+.case-study--penn-pins .case-study__goal-list--feature-titles {
+  margin-bottom: 40px;
+}
+
+/* Space between reflection intro and “What I learned” */
+.case-study--penn-pins .case-study__insight-ribbon--reflection-gap.case-study__insight-ribbon--sentence {
+  margin-top: 36px !important;
+  margin-bottom: 20px !important;
+}
+
+/* Problem section: slightly larger goal tags */
+.case-study--penn-pins .case-study__goal-list--problem-goals .case-study__goal-tag {
+  font-size: clamp(15px, 1.5vw, 18px);
+}
+
+/* Pivot: before = neutral frame (no purple); after = subtle purple frame */
+.case-study--penn-pins .case-study__pivot-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.case-study--penn-pins .case-study__pivot-col .case-study__demo-cap {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Pivot wrappers: no dashboard border — only gray pad (border lives on img in case-study.css) */
+.case-study--penn-pins .case-study__pivot-figure--before,
+.case-study--penn-pins .case-study__pivot-figure--after {
+  border: none;
+  box-shadow: none;
+}
+
+/* After shot: purple-tinted dashed border on the image only */
+.case-study--penn-pins .case-study__pivot-figure--after img {
+  border-color: rgba(109, 91, 143, 0.36);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 24px rgba(109, 91, 143, 0.12);
+}
+
+.case-study--penn-pins .case-study__pivot-figure--before img,
+.case-study--penn-pins .case-study__pivot-figure--after img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(62vh, 520px);
+  object-fit: contain;
+  margin: 0 auto;
+}

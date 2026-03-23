@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doona Coloring - Mary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f2f1ec;
+      --paper: #f9f8f3;
+      --ink: #0f0f0f;
+      --line: #d8d7d1;
+      --muted: #303030;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Manrope, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 14px;
+    }
+    .frame {
+      background: var(--paper);
+      border: 1px solid #deddd8;
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .topbar {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      font-size: 20px;
+      border-bottom: 1px solid #ecebe6;
+      font-family: "Patrick Hand", cursive;
+    }
+    .topbar .group { display: flex; gap: 14px; align-items: center; }
+    .brand { font-size: 36px; letter-spacing: 0.8px; }
+
+    .title {
+      text-align: center;
+      margin: 18px 14px 6px;
+      font-size: clamp(36px, 5vw, 78px);
+      font-family: "Patrick Hand", cursive;
+      line-height: 0.92;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+    }
+
+    .scene-wrap {
+      padding: 4px 24px 0;
+    }
+    svg#scene {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 720px;
+    }
+    .line-art {
+      fill: none;
+      stroke: #111;
+      stroke-width: 3.3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .colorable {
+      fill: #fff;
+      stroke: #111;
+      stroke-width: 3.3;
+      cursor: pointer;
+      transition: fill .1s linear;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 24px 18px;
+      align-items: flex-end;
+    }
+    .desc {
+      max-width: 340px;
+    }
+    .desc h2 {
+      margin: 0;
+      font-size: 46px;
+      font-family: "Patrick Hand", cursive;
+      line-height: 0.9;
+      text-transform: lowercase;
+    }
+    .desc p {
+      margin: 10px 0 8px;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+    .desc a {
+      color: #111;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      flex: 1;
+      padding-bottom: 2px;
+    }
+    .btn {
+      border: 1px solid #111;
+      border-radius: 999px;
+      background: #fff;
+      min-width: 108px;
+      padding: 8px 12px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn:hover { background: #f1f1ef; }
+
+    .palette-side {
+      min-width: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 2px;
+    }
+    .pick {
+      font-family: "Patrick Hand", cursive;
+      font-size: 27px;
+      line-height: 0.95;
+      text-transform: lowercase;
+      transform: rotate(-4deg);
+    }
+    .swatches { display: flex; gap: 10px; }
+    .swatch {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid #111;
+      cursor: pointer;
+      position: relative;
+    }
+    .swatch.active::after {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border: 2px solid #111;
+      border-radius: 999px;
+    }
+    .slider {
+      width: 120px;
+      appearance: none;
+      background: transparent;
+    }
+    .slider::-webkit-slider-runnable-track {
+      height: 2px;
+      background: #111;
+      border-radius: 999px;
+    }
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #b63a47;
+      border: 1px solid #111;
+      margin-top: -8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1200px) {
+      .bottom { flex-direction: column; align-items: stretch; }
+      .palette-side { min-width: 0; justify-content: flex-start; flex-wrap: wrap; }
+      .controls { justify-content: flex-start; }
+    }
+    @media (max-width: 800px) {
+      body { padding: 0; }
+      .frame { border-radius: 0; border-left: 0; border-right: 0; }
+      .topbar { font-size: 16px; }
+      .brand { font-size: 30px; }
+      .title { margin-top: 12px; }
+      .scene-wrap { padding: 4px 8px 0; }
+      .bottom { padding: 8px; }
+      .desc h2 { font-size: 34px; }
+      .desc p { font-size: 14px; }
+      .btn { min-width: 84px; font-size: 11px; }
+      .swatch { width: 28px; height: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <header class="topbar">
+      <div class="group"><span>shop</span><span>play</span></div>
+      <div class="brand">woset</div>
+      <div class="group"><span>cart (0)</span><span>information</span></div>
+    </header>
+
+    <h1 class="title">doona going to<br>pick berries</h1>
+
+    <div class="scene-wrap">
+      <svg id="scene" viewBox="0 0 1400 760" role="img" aria-label="Doona berry scene coloring drawing">
+        <path class="line-art" d="M250 250h90v130h-90z"></path>
+        <path class="line-art" d="M220 250l75-100 75 100z"></path>
+        <circle class="line-art" cx="294" cy="205" r="14"></circle>
+        <path class="line-art" d="M294 192v26M281 205h26"></path>
+
+        <path class="line-art" d="M378 283c160-95 256-50 315-42"></path>
+        <path class="line-art" d="M222 366c64-2 122 4 155 24 43 26 32 70 4 107-39 50-107 102-134 187"></path>
+
+        <path class="line-art" d="M244 684c177 9 349 4 451-11"></path>
+        <path class="line-art" d="M683 241c106-21 248-8 357 31"></path>
+        <path class="line-art" d="M688 684c170 13 397 0 535-14"></path>
+
+        <path class="colorable" data-part="tree-back" d="M885 268c89 13 171 64 170 167 0 60-15 115-15 231H705c18-120 10-195-5-270-13-63 8-115 46-128 39-13 64 2 95 26 7-50 18-70 44-78z"></path>
+        <path class="line-art" d="M903 316c24 6 39 38 37 65"></path>
+        <path class="line-art" d="M982 327c24 15 34 47 25 78"></path>
+        <path class="line-art" d="M761 566c10 17 30 37 54 48"></path>
+
+        <circle class="colorable" data-part="berry-1" cx="792" cy="283" r="55"></circle>
+        <circle class="colorable" data-part="berry-2" cx="872" cy="241" r="60"></circle>
+        <circle class="colorable" data-part="berry-3" cx="947" cy="254" r="56"></circle>
+        <circle class="colorable" data-part="berry-4" cx="1015" cy="242" r="52"></circle>
+        <circle class="colorable" data-part="berry-5" cx="1084" cy="265" r="56"></circle>
+        <circle class="colorable" data-part="berry-6" cx="821" cy="352" r="56"></circle>
+        <circle class="colorable" data-part="berry-7" cx="903" cy="346" r="58"></circle>
+        <circle class="colorable" data-part="berry-8" cx="1013" cy="357" r="62"></circle>
+        <circle class="colorable" data-part="berry-9" cx="1120" cy="402" r="67"></circle>
+
+        <g class="line-art">
+          <circle cx="782" cy="282" r="6"></circle><circle cx="806" cy="272" r="6"></circle>
+          <circle cx="861" cy="236" r="6"></circle><circle cx="887" cy="224" r="6"></circle>
+          <circle cx="946" cy="255" r="6"></circle><circle cx="1021" cy="239" r="6"></circle>
+          <circle cx="1082" cy="261" r="6"></circle><circle cx="818" cy="350" r="6"></circle>
+          <circle cx="902" cy="338" r="6"></circle><circle cx="1001" cy="357" r="6"></circle>
+          <circle cx="1113" cy="389" r="6"></circle><circle cx="1138" cy="417" r="6"></circle>
+        </g>
+
+        <path class="colorable" data-part="body" d="M610 500c20-67 69-102 126-102 76 0 115 58 115 122v142H575V528c0-16 15-24 35-28z"></path>
+        <circle class="colorable" data-part="head" cx="703" cy="405" r="76"></circle>
+        <path class="colorable" data-part="hair" d="M624 410c2-48 37-87 83-95-47-29-103 11-113 61-7 37 5 66 30 95z"></path>
+        <path class="colorable" data-part="basket" d="M564 552l82-26 20 84h-93z"></path>
+        <path class="line-art" d="M572 558l80 58M594 543l-20 67M614 535l-14 76M638 530l-9 82M663 527l-1 83"></path>
+
+        <path class="line-art" d="M686 393h12M717 393h12M695 423c8 8 20 8 28 0"></path>
+        <path class="line-art" d="M669 460c24 10 43 9 66-3"></path>
+
+        <path class="colorable" data-part="arm-1" d="M630 516c-34 8-63 33-71 60-7 23 6 37 25 31 37-12 63-51 68-82z"></path>
+        <path class="colorable" data-part="arm-2" d="M778 518c32-7 63 20 75 47 14 31 2 47-22 42-34-8-66-40-78-75z"></path>
+        <path class="colorable" data-part="pants" d="M655 629h120v41H655z"></path>
+        <path class="colorable" data-part="leg-1" d="M651 671h55v40h-55z"></path>
+        <path class="colorable" data-part="leg-2" d="M724 671h55v40h-55z"></path>
+        <path class="line-art" d="M651 712c17 16 34 17 57-2M724 712c15 15 33 13 55-2"></path>
+
+        <path class="colorable" data-part="stick" d="M873 383h20v312h-20z"></path>
+
+        <path class="line-art" d="M1114 688c14 6 26 11 44 8"></path>
+      </svg>
+    </div>
+
+    <section class="bottom">
+      <div class="desc">
+        <h2>Doona</h2>
+        <p>It depends on the season, but Doona is often very hard to find. Your best chance is looking in the forest, they say the farther you walk into the forest the more you will understand Doona's mysteries.</p>
+        <a href="#">Back to Play</a>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="startOver" type="button">start over</button>
+        <button class="btn" id="eraser" type="button">eraser</button>
+        <button class="btn" id="saveBtn" type="button">save</button>
+        <button class="btn" id="shareBtn" type="button">share</button>
+      </div>
+
+      <div class="palette-side">
+        <div class="pick">pick a<br>color</div>
+        <div class="swatches" id="swatches"></div>
+        <input class="slider" type="range" min="0" max="100" value="50" aria-label="Brush size slider visual" />
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const palette = ['#8f2743', '#3b5f9a', '#593981', '#2e6f5a', '#b8b46a', '#ffffff'];
+      const swatches = document.getElementById('swatches');
+      const colorables = Array.from(document.querySelectorAll('.colorable'));
+      const startOverBtn = document.getElementById('startOver');
+      const eraserBtn = document.getElementById('eraser');
+      const saveBtn = document.getElementById('saveBtn');
+      const shareBtn = document.getElementById('shareBtn');
+
+      let selected = palette[0];
+
+      function renderSwatches() {
+        swatches.innerHTML = '';
+        palette.forEach((color) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'swatch' + (selected === color ? ' active' : '');
+          btn.style.background = color;
+          btn.setAttribute('aria-label', 'pick color ' + color);
+          btn.addEventListener('click', () => {
+            selected = color;
+            renderSwatches();
+          });
+          swatches.appendChild(btn);
+        });
+      }
+
+      colorables.forEach((shape) => {
+        shape.addEventListener('click', () => {
+          shape.style.fill = selected;
+        });
+      });
+
+      startOverBtn.addEventListener('click', () => {
+        colorables.forEach((shape) => { shape.style.fill = '#fff'; });
+      });
+
+      eraserBtn.addEventListener('click', () => {
+        selected = '#ffffff';
+        renderSwatches();
+      });
+
+      saveBtn.addEventListener('click', () => {
+        const svg = document.getElementById('scene');
+        const serializer = new XMLSerializer();
+        const source = serializer.serializeToString(svg);
+        const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'doona-coloring.svg';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      shareBtn.addEventListener('click', async () => {
+        const text = 'I just colored Doona in Mary\\'s playful portfolio page.';
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: 'Doona Coloring', text });
+          } catch (_) {}
+        } else {
+          await navigator.clipboard.writeText(text);
+          shareBtn.textContent = 'copied';
+          setTimeout(() => { shareBtn.textContent = 'share'; }, 1200);
+        }
+      });
+
+      renderSwatches();
+    })();
+  </script>
+</body>
+</html>
